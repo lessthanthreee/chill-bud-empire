@@ -22,7 +22,7 @@ export default function VapeScene() {
             snap={{ mass: 4, tension: 1500 }}
           >
             <Stage environment="city" intensity={0.6} shadows>
-              <VapeModel position={[0, -1, 0]} scale={[0.8, 0.8, 0.8]} />
+              <VapeModel position={[0, -1, 0]} scale={0.8} />
             </Stage>
           </PresentationControls>
           <Environment preset="city" />

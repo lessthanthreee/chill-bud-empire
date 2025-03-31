@@ -1,10 +1,8 @@
 
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import { Mesh } from "three";
 
-// We'll use a simple cylinder as a fallback if the model fails to load
 export function VapeModel(props: any) {
   const meshRef = useRef<Mesh>(null);
   
