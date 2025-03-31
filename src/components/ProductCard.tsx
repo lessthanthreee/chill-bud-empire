@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCart, Product } from "@/context/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, CalendarClock, BadgePercent } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "@/components/ui/use-toast";
 
 interface ProductCardProps {
   product: Product;
@@ -14,10 +22,23 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent, subscription: "none" | "biweekly" | "monthly" = "none") => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, 1);
+    addToCart(product, 1, subscription);
+    
+    const subscriptionText = subscription !== "none" 
+      ? `with ${subscription} subscription (10% off)` 
+      : "";
+    
+    toast({
+      title: "Added to cart",
+      description: `${product.name} ${subscriptionText}`,
+    });
+  };
+
+  const handleAddSubscription = (e: React.MouseEvent, frequency: "biweekly" | "monthly") => {
+    handleAddToCart(e, frequency);
   };
 
   return (
@@ -51,15 +72,65 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </CardContent>
         <CardFooter className="p-4 pt-0">
-          <Button
-            variant="default"
-            size="sm"
-            className="w-full"
-            onClick={handleAddToCart}
-          >
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart
-          </Button>
+          <div className="w-full flex space-x-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="flex-1"
+              onClick={(e) => handleAddToCart(e)}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Add
+            </Button>
+            
+            <DropdownMenu>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="px-2">
+                        <CalendarClock className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Subscribe & Save</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem 
+                  onClick={(e) => handleAddSubscription(e, "biweekly")}
+                  className="flex items-center cursor-pointer"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center">
+                      <CalendarClock className="mr-2 h-4 w-4" />
+                      <span>Biweekly</span>
+                    </div>
+                    <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground text-xs">
+                      <BadgePercent className="h-3 w-3 mr-1" /> 10%
+                    </Badge>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={(e) => handleAddSubscription(e, "monthly")}
+                  className="flex items-center cursor-pointer"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center">
+                      <CalendarClock className="mr-2 h-4 w-4" />
+                      <span>Monthly</span>
+                    </div>
+                    <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground text-xs">
+                      <BadgePercent className="h-3 w-3 mr-1" /> 10%
+                    </Badge>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </CardFooter>
       </Link>
     </Card>

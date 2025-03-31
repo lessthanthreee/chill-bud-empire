@@ -15,16 +15,20 @@ export type Product = {
   featured?: boolean;
 };
 
+type SubscriptionFrequency = "none" | "biweekly" | "monthly";
+
 type CartItem = {
   product: Product;
   quantity: number;
+  subscription: SubscriptionFrequency;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number, subscription?: SubscriptionFrequency) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
+  updateSubscription: (productId: number, subscription: SubscriptionFrequency) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   toggleCart: () => void;
@@ -59,26 +63,39 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     
-    // Calculate total and count
-    const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    // Calculate total and count with subscription discounts
+    const total = cart.reduce((sum, item) => {
+      let itemPrice = item.product.price;
+      // Apply 10% discount for subscription items
+      if (item.subscription !== "none") {
+        itemPrice = itemPrice * 0.9;
+      }
+      return sum + (itemPrice * item.quantity);
+    }, 0);
+    
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     
     setCartTotal(total);
     setCartCount(count);
   }, [cart]);
 
-  const addToCart = (product: Product, quantity = 1) => {
+  const addToCart = (product: Product, quantity = 1, subscription: SubscriptionFrequency = "none") => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.product.id === product.id);
+      // Check if product with same subscription exists
+      const existingItemIndex = prevCart.findIndex(
+        item => item.product.id === product.id && item.subscription === subscription
+      );
       
-      if (existingItem) {
-        return prevCart.map(item => 
-          item.product.id === product.id 
-            ? { ...item, quantity: item.quantity + quantity } 
+      if (existingItemIndex >= 0) {
+        // Update existing item
+        return prevCart.map((item, index) => 
+          index === existingItemIndex
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       } else {
-        return [...prevCart, { product, quantity }];
+        // Add new item
+        return [...prevCart, { product, quantity, subscription }];
       }
     });
     
@@ -100,6 +117,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       prevCart.map(item => 
         item.product.id === productId 
           ? { ...item, quantity } 
+          : item
+      )
+    );
+  };
+
+  const updateSubscription = (productId: number, subscription: SubscriptionFrequency) => {
+    setCart(prevCart => 
+      prevCart.map(item => 
+        item.product.id === productId 
+          ? { ...item, subscription } 
           : item
       )
     );
@@ -127,7 +154,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         cart, 
         addToCart, 
         removeFromCart, 
-        updateQuantity, 
+        updateQuantity,
+        updateSubscription,
         clearCart,
         isCartOpen,
         toggleCart,

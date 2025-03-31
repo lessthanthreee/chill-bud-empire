@@ -15,8 +15,12 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Product, useCart } from "@/context/CartContext";
-import { ChevronLeft, Minus, Plus, ShieldCheck } from "lucide-react";
+import { ChevronLeft, Minus, Plus, ShieldCheck, CalendarClock, Sparkles } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Sample products
 const products: Product[] = [
@@ -127,6 +131,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [subscription, setSubscription] = useState<"none" | "biweekly" | "monthly">("none");
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -143,13 +148,26 @@ const ProductDetail = () => {
       setRelatedProducts(related);
     }
 
+    // Reset subscription and quantity when product changes
+    setSubscription("none");
+    setQuantity(1);
+
     // Scroll to top when product changes
     window.scrollTo(0, 0);
   }, [id]);
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, quantity);
+      addToCart(product, quantity, subscription);
+      
+      const subscriptionText = subscription !== "none" 
+        ? `with ${subscription} subscription (10% off)` 
+        : "";
+      
+      toast({
+        title: "Product added to cart",
+        description: `${product.name} × ${quantity} ${subscriptionText}`,
+      });
     }
   };
 
@@ -165,6 +183,18 @@ const ProductDetail = () => {
     if (quantity > 1) {
       setQuantity(prev => prev - 1);
     }
+  };
+
+  const calculatePrice = () => {
+    if (!product) return 0;
+    let price = product.price;
+    
+    // Apply 10% discount for subscriptions
+    if (subscription !== "none") {
+      price = price * 0.9;
+    }
+    
+    return price.toFixed(2);
   };
 
   if (!product) {
@@ -213,7 +243,16 @@ const ProductDetail = () => {
           <div>
             <Badge className="mb-2">{product.category}</Badge>
             <h1 className="text-3xl font-bold">{product.name}</h1>
-            <p className="text-2xl font-semibold mt-2">${product.price.toFixed(2)}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <p className="text-2xl font-semibold">
+                ${calculatePrice()}
+              </p>
+              {subscription !== "none" && (
+                <Badge variant="outline" className="bg-accent text-accent-foreground">
+                  10% off
+                </Badge>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -230,23 +269,34 @@ const ProductDetail = () => {
             )}
           </div>
 
-          <div>
-            <h3 className="text-lg font-medium mb-2">Description</h3>
-            <p className="text-muted-foreground">{product.description}</p>
-          </div>
-
-          {product.effects && product.effects.length > 0 && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">Effects</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.effects.map((effect) => (
-                  <Badge key={effect} variant="secondary">
-                    {effect}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
+          <Tabs defaultValue="description" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="description">Description</TabsTrigger>
+              <TabsTrigger value="effects">Effects</TabsTrigger>
+              <TabsTrigger value="lab-results">Lab Results</TabsTrigger>
+            </TabsList>
+            <TabsContent value="description" className="pt-4">
+              <p className="text-muted-foreground">{product.description}</p>
+            </TabsContent>
+            <TabsContent value="effects" className="pt-4">
+              {product.effects && product.effects.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {product.effects.map((effect) => (
+                    <Badge key={effect} variant="secondary">
+                      {effect}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">No effects listed for this product.</p>
+              )}
+            </TabsContent>
+            <TabsContent value="lab-results" className="pt-4">
+              <p className="text-muted-foreground">
+                View the <Link to="/lab-results" className="text-primary underline">lab results</Link> for this product to verify purity and potency.
+              </p>
+            </TabsContent>
+          </Tabs>
 
           <div className="bg-secondary/50 rounded-lg p-4 flex items-center space-x-3">
             <ShieldCheck className="h-5 w-5 text-primary" />
@@ -254,6 +304,50 @@ const ProductDetail = () => {
               <p className="font-medium">Lab Tested</p>
               <p className="text-muted-foreground">All products are tested for purity and potency</p>
             </div>
+          </div>
+
+          <div className="border border-border rounded-lg p-4">
+            <h3 className="text-lg font-medium mb-3 flex items-center">
+              <CalendarClock className="h-5 w-5 mr-2" />
+              Purchase Options
+            </h3>
+            <RadioGroup 
+              defaultValue="none" 
+              value={subscription}
+              onValueChange={(val) => setSubscription(val as "none" | "biweekly" | "monthly")}
+              className="space-y-3"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="none" id="one-time" />
+                <FormLabel htmlFor="one-time" className="flex-1">One-time purchase</FormLabel>
+                <span className="text-muted-foreground">${product.price.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="biweekly" id="biweekly" />
+                <FormLabel htmlFor="biweekly" className="flex-1 flex items-center">
+                  Biweekly subscription
+                  <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">
+                    <Sparkles className="h-3 w-3 mr-1" /> 10% off
+                  </Badge>
+                </FormLabel>
+                <span className="text-muted-foreground">${(product.price * 0.9).toFixed(2)}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="monthly" id="monthly" />
+                <FormLabel htmlFor="monthly" className="flex-1 flex items-center">
+                  Monthly subscription
+                  <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">
+                    <Sparkles className="h-3 w-3 mr-1" /> 10% off
+                  </Badge>
+                </FormLabel>
+                <span className="text-muted-foreground">${(product.price * 0.9).toFixed(2)}</span>
+              </div>
+            </RadioGroup>
+            {subscription !== "none" && (
+              <p className="text-sm text-muted-foreground mt-3">
+                Subscribe and save 10%. Easily manage deliveries in your account.
+              </p>
+            )}
           </div>
 
           <div className="pt-4">
