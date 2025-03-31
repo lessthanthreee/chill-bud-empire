@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { Product, useCart } from "@/context/CartContext";
 import { ChevronLeft, Minus, Plus, ShieldCheck, CalendarClock, Sparkles } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -135,12 +134,10 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    // Find the product by ID
     const productId = parseInt(id || "0");
     const foundProduct = products.find(p => p.id === productId) || null;
     setProduct(foundProduct);
 
-    // Find related products (same category, excluding current product)
     if (foundProduct) {
       const related = products
         .filter(p => p.category === foundProduct.category && p.id !== foundProduct.id)
@@ -148,11 +145,8 @@ const ProductDetail = () => {
       setRelatedProducts(related);
     }
 
-    // Reset subscription and quantity when product changes
     setSubscription("none");
     setQuantity(1);
-
-    // Scroll to top when product changes
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -189,7 +183,6 @@ const ProductDetail = () => {
     if (!product) return 0;
     let price = product.price;
     
-    // Apply 10% discount for subscriptions
     if (subscription !== "none") {
       price = price * 0.9;
     }
@@ -229,7 +222,6 @@ const ProductDetail = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        {/* Product Image */}
         <div className="rounded-lg overflow-hidden border border-border">
           <img
             src={product.image}
@@ -238,21 +230,18 @@ const ProductDetail = () => {
           />
         </div>
 
-        {/* Product Info */}
         <div className="space-y-6">
-          <div>
-            <Badge className="mb-2">{product.category}</Badge>
-            <h1 className="text-3xl font-bold">{product.name}</h1>
-            <div className="flex items-center gap-2 mt-2">
-              <p className="text-2xl font-semibold">
-                ${calculatePrice()}
-              </p>
-              {subscription !== "none" && (
-                <Badge variant="outline" className="bg-accent text-accent-foreground">
-                  10% off
-                </Badge>
-              )}
-            </div>
+          <Badge className="mb-2">{product.category}</Badge>
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-2xl font-semibold">
+              ${calculatePrice()}
+            </p>
+            {subscription !== "none" && (
+              <Badge variant="outline" className="bg-accent text-accent-foreground">
+                10% off
+              </Badge>
+            )}
           </div>
 
           <div className="flex items-center space-x-4">
@@ -319,27 +308,27 @@ const ProductDetail = () => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="none" id="one-time" />
-                <FormLabel htmlFor="one-time" className="flex-1">One-time purchase</FormLabel>
+                <Label htmlFor="one-time" className="flex-1">One-time purchase</Label>
                 <span className="text-muted-foreground">${product.price.toFixed(2)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="biweekly" id="biweekly" />
-                <FormLabel htmlFor="biweekly" className="flex-1 flex items-center">
+                <Label htmlFor="biweekly" className="flex-1 flex items-center">
                   Biweekly subscription
                   <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">
                     <Sparkles className="h-3 w-3 mr-1" /> 10% off
                   </Badge>
-                </FormLabel>
+                </Label>
                 <span className="text-muted-foreground">${(product.price * 0.9).toFixed(2)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="monthly" id="monthly" />
-                <FormLabel htmlFor="monthly" className="flex-1 flex items-center">
+                <Label htmlFor="monthly" className="flex-1 flex items-center">
                   Monthly subscription
                   <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">
                     <Sparkles className="h-3 w-3 mr-1" /> 10% off
                   </Badge>
-                </FormLabel>
+                </Label>
                 <span className="text-muted-foreground">${(product.price * 0.9).toFixed(2)}</span>
               </div>
             </RadioGroup>
@@ -400,7 +389,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div className="mt-16 mb-16">
           <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
