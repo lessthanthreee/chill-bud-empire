@@ -3,7 +3,12 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
 
-export function VapeModel(props: any) {
+interface VapeModelProps {
+  position?: [number, number, number];
+  scale?: number | [number, number, number];
+}
+
+export function VapeModel(props: VapeModelProps) {
   const meshRef = useRef<Mesh>(null);
   
   // Rotate the model on each frame
@@ -14,15 +19,19 @@ export function VapeModel(props: any) {
   });
 
   return (
-    <group {...props} dispose={null}>
-      <mesh ref={meshRef} castShadow receiveShadow>
-        <cylinderGeometry args={[0.5, 0.5, 3, 32]} />
-        <meshStandardMaterial 
-          color="#32CD32" 
-          metalness={0.8}
-          roughness={0.2}
-        />
-      </mesh>
-    </group>
+    <mesh 
+      ref={meshRef} 
+      position={props.position} 
+      scale={props.scale}
+      castShadow 
+      receiveShadow
+    >
+      <cylinderGeometry args={[0.5, 0.5, 3, 32]} />
+      <meshStandardMaterial 
+        color="#32CD32" 
+        metalness={0.8}
+        roughness={0.2}
+      />
+    </mesh>
   );
 }

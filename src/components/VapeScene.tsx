@@ -1,7 +1,7 @@
 
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PresentationControls, Environment, Stage } from "@react-three/drei";
+import { PresentationControls, Environment, Stage } from "@react-three/drei";
 import { VapeModel } from "./VapeModel";
 
 export default function VapeScene() {
