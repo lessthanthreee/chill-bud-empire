@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/context/CartContext";
 import { Cannabis, Leaf, ShieldCheck, Zap } from "lucide-react";
+import VapeScene from "@/components/VapeScene";
 
 // Sample featured products for the homepage
 const featuredProducts: Product[] = [
@@ -69,30 +70,37 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-primary/5 py-20 md:py-32">
         <div className="leaf-pattern absolute inset-0 opacity-20"></div>
-        <div className="container relative mx-auto px-4 text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            Premium Delta 8 Products <br className="hidden sm:block" />
-            <span className="text-primary">For Your Wellness</span>
-          </h1>
-          <p className="mx-auto mb-8 max-w-lg text-lg text-muted-foreground md:text-xl">
-            Experience the highest quality Delta 8 THC products, responsibly sourced and lab-tested for your peace of mind.
-          </p>
-          <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button
-              size="lg"
-              asChild
-              className="min-w-[150px]"
-            >
-              <Link to="/products">Shop Now</Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              asChild
-              className="min-w-[150px]"
-            >
-              <Link to="/about">Learn More</Link>
-            </Button>
+        <div className="container relative mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="text-center md:text-left">
+              <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+                Premium Delta 8 Products <br className="hidden sm:block" />
+                <span className="text-primary">For Your Wellness</span>
+              </h1>
+              <p className="mb-8 max-w-lg mx-auto md:mx-0 text-lg text-muted-foreground md:text-xl">
+                Experience the highest quality Delta 8 THC products, responsibly sourced and lab-tested for your peace of mind.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                <Button
+                  size="lg"
+                  asChild
+                  className="min-w-[150px]"
+                >
+                  <Link to="/products">Shop Now</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  asChild
+                  className="min-w-[150px]"
+                >
+                  <Link to="/about">Learn More</Link>
+                </Button>
+              </div>
+            </div>
+            <div className="mt-8 md:mt-0">
+              <VapeScene />
+            </div>
           </div>
         </div>
       </section>
