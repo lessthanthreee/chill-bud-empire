@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Cannabis, Instagram, Facebook, Twitter } from "lucide-react";
+import { Cannabis, Instagram, Facebook, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -13,11 +13,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Cannabis className="h-6 w-6 text-chill-500" />
-              <span className="font-bold text-lg">Chill Bud Empire</span>
+              <Cannabis className="h-6 w-6 text-primary" />
+              <span className="font-bold text-lg">Cleveland Cartridge Co.</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              Premium Delta 8 products from Ohio. Quality, purity, and compliance guaranteed.
+              Premium vape replacement pods from Cleveland. Quality, performance, and satisfaction guaranteed.
             </p>
           </div>
 
@@ -53,24 +53,28 @@ const Footer = () => {
             <h3 className="font-semibold mb-4 text-base">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/terms" className="text-muted-foreground hover:text-primary text-sm">
+                <Link to="/terms" className="text-muted-foreground hover:text-primary text-sm flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-muted-foreground hover:text-primary text-sm">
+                <Link to="/privacy" className="text-muted-foreground hover:text-primary text-sm flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/shipping" className="text-muted-foreground hover:text-primary text-sm">
+                <Link to="/shipping" className="text-muted-foreground hover:text-primary text-sm flex items-center gap-2">
+                  <Truck className="h-4 w-4" />
                   Shipping Policy
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary text-sm">
+                <Link to="/lab-results" className="text-muted-foreground hover:text-primary text-sm flex items-center gap-2">
+                  <FlaskConical className="h-4 w-4" />
                   Lab Results
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -79,18 +83,18 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4 text-base">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Columbus, Ohio</li>
-              <li>contact@chillbudempire.com</li>
+              <li>Cleveland, Ohio</li>
+              <li>contact@clevelandcartridge.com</li>
               <li>Hours: Mon-Sat: 10am - 8pm</li>
             </ul>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -99,7 +103,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
           <p>
-            &copy; {currentYear} Chill Bud Empire. All rights reserved.
+            &copy; {currentYear} Cleveland Cartridge Co. All rights reserved.
           </p>
           <p className="mt-2">
             You must be 21 years or older to purchase products from this site.

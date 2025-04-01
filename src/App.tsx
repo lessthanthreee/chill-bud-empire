@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,9 @@ import GiftCards from "./pages/GiftCards";
 import Wholesale from "./pages/Wholesale";
 import Subscriptions from "./pages/Subscriptions";
 import TrackOrder from "./pages/TrackOrder";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Shipping from "./pages/Shipping";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +61,9 @@ const App = () => (
                 <Route path="/wholesale" element={<Wholesale />} />
                 <Route path="/subscriptions" element={<Subscriptions />} />
                 <Route path="/track-order" element={<TrackOrder />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/shipping" element={<Shipping />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
