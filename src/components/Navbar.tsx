@@ -18,8 +18,9 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border">
       <div className="container mx-auto flex justify-between items-center py-4 px-4">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="bg-primary rounded-full h-8 w-8 flex items-center justify-center text-primary-foreground font-bold">CC</div>
-          <span className="text-xl font-bold text-foreground">Cleveland Cartridge Co.</span>
+          <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center text-primary-foreground font-bold text-lg">CCC</div>
+          <span className="text-xl font-bold text-foreground hidden sm:inline">Cleveland Cartridge Co.</span>
+          <span className="text-xl font-bold text-foreground sm:hidden">CCC</span>
         </Link>
         
         <div className="flex items-center space-x-4">

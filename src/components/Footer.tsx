@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Cannabis, Instagram, Facebook, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
+import { Instagram, Facebook, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Cannabis className="h-6 w-6 text-primary" />
+              <div className="bg-primary rounded-full h-8 w-8 flex items-center justify-center text-primary-foreground font-bold text-sm">CCC</div>
               <span className="font-bold text-lg">Cleveland Cartridge Co.</span>
             </div>
             <p className="text-muted-foreground text-sm">
@@ -111,6 +111,10 @@ const Footer = () => {
           <p className="mt-2">
             The statements on this website have not been evaluated by the Food and Drug Administration. 
             This product is not intended to diagnose, treat, cure, or prevent any disease.
+          </p>
+          <p className="mt-2">
+            Our products contain delta-8 THC and may cause intoxication. Delta-8 THC's legal status varies by state. 
+            It is your responsibility to know whether delta-8 THC is legal in your state. Use responsibly.
           </p>
         </div>
       </div>
