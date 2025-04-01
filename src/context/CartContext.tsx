@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 export type Product = {
@@ -18,11 +17,12 @@ export type Product = {
 type CartItem = {
   product: Product;
   quantity: number;
+  subscription?: "none" | "biweekly" | "monthly";
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number, subscription?: "none" | "biweekly" | "monthly") => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
@@ -46,7 +46,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [subtotal, setSubtotal] = useState(0);
   const [shippingCost, setShippingCost] = useState(0);
 
-  // Load cart from localStorage on initial render
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -59,50 +58,41 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     
-    // Calculate subtotal
     const subtotalAmount = cart.reduce((sum, item) => {
       return sum + (item.product.price * item.quantity);
     }, 0);
     
     setSubtotal(subtotalAmount);
     
-    // Calculate shipping cost (free if subtotal > $75, otherwise $6)
     const shipping = subtotalAmount >= 75 ? 0 : 6;
     setShippingCost(shipping);
     
-    // Calculate total including shipping
     setCartTotal(subtotalAmount + shipping);
     
-    // Calculate item count
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setCartCount(count);
   }, [cart]);
 
-  const addToCart = (product: Product, quantity = 1) => {
+  const addToCart = (product: Product, quantity = 1, subscription?: "none" | "biweekly" | "monthly") => {
     setCart(prevCart => {
-      // Check if product exists
       const existingItemIndex = prevCart.findIndex(
-        item => item.product.id === product.id
+        item => item.product.id === product.id && item.subscription === subscription
       );
       
       if (existingItemIndex >= 0) {
-        // Update existing item
         return prevCart.map((item, index) => 
           index === existingItemIndex
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       } else {
-        // Add new item
-        return [...prevCart, { product, quantity }];
+        return [...prevCart, { product, quantity, subscription }];
       }
     });
     
-    // Open cart drawer when an item is added
     setIsCartOpen(true);
   };
 
