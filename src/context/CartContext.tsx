@@ -15,20 +15,16 @@ export type Product = {
   featured?: boolean;
 };
 
-type SubscriptionFrequency = "none" | "biweekly" | "monthly";
-
 type CartItem = {
   product: Product;
   quantity: number;
-  subscription: SubscriptionFrequency;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, quantity?: number, subscription?: SubscriptionFrequency) => void;
+  addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
-  updateSubscription: (productId: number, subscription: SubscriptionFrequency) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   toggleCart: () => void;
@@ -36,6 +32,8 @@ type CartContextType = {
   openCart: () => void;
   cartTotal: number;
   cartCount: number;
+  subtotal: number;
+  shippingCost: number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -45,6 +43,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartTotal, setCartTotal] = useState(0);
   const [cartCount, setCartCount] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [shippingCost, setShippingCost] = useState(0);
 
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -63,27 +63,30 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     
-    // Calculate total and count with subscription discounts
-    const total = cart.reduce((sum, item) => {
-      let itemPrice = item.product.price;
-      // Apply 10% discount for subscription items
-      if (item.subscription !== "none") {
-        itemPrice = itemPrice * 0.9;
-      }
-      return sum + (itemPrice * item.quantity);
+    // Calculate subtotal
+    const subtotalAmount = cart.reduce((sum, item) => {
+      return sum + (item.product.price * item.quantity);
     }, 0);
     
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    setSubtotal(subtotalAmount);
     
-    setCartTotal(total);
+    // Calculate shipping cost (free if subtotal > $75, otherwise $6)
+    const shipping = subtotalAmount >= 75 ? 0 : 6;
+    setShippingCost(shipping);
+    
+    // Calculate total including shipping
+    setCartTotal(subtotalAmount + shipping);
+    
+    // Calculate item count
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setCartCount(count);
   }, [cart]);
 
-  const addToCart = (product: Product, quantity = 1, subscription: SubscriptionFrequency = "none") => {
+  const addToCart = (product: Product, quantity = 1) => {
     setCart(prevCart => {
-      // Check if product with same subscription exists
+      // Check if product exists
       const existingItemIndex = prevCart.findIndex(
-        item => item.product.id === product.id && item.subscription === subscription
+        item => item.product.id === product.id
       );
       
       if (existingItemIndex >= 0) {
@@ -95,7 +98,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         );
       } else {
         // Add new item
-        return [...prevCart, { product, quantity, subscription }];
+        return [...prevCart, { product, quantity }];
       }
     });
     
@@ -117,16 +120,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       prevCart.map(item => 
         item.product.id === productId 
           ? { ...item, quantity } 
-          : item
-      )
-    );
-  };
-
-  const updateSubscription = (productId: number, subscription: SubscriptionFrequency) => {
-    setCart(prevCart => 
-      prevCart.map(item => 
-        item.product.id === productId 
-          ? { ...item, subscription } 
           : item
       )
     );
@@ -155,14 +148,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         addToCart, 
         removeFromCart, 
         updateQuantity,
-        updateSubscription,
         clearCart,
         isCartOpen,
         toggleCart,
         closeCart,
         openCart,
         cartTotal,
-        cartCount
+        cartCount,
+        subtotal,
+        shippingCost
       }}
     >
       {children}
