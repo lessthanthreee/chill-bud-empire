@@ -79,8 +79,8 @@ const LabResults = () => {
             </tr>
             <tr className="border-t border-border">
               <td className="p-2">Delta-9 THC</td>
-              <td className="p-2 text-right">< 0.3%</td>
-              <td className="p-2 text-right">< 3.0</td>
+              <td className="p-2 text-right">&lt; 0.3%</td>
+              <td className="p-2 text-right">&lt; 3.0</td>
             </tr>
           </tbody>
         </table>
