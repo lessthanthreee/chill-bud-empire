@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,17 @@ import { ShieldCheck, Truck, CreditCard, Star } from "lucide-react";
 import VapeScene from "@/components/VapeScene";
 
 const Index = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div>
       {/* Hero Section */}
@@ -42,7 +53,10 @@ const Index = () => {
               </div>
             </div>
             <div className="mt-8 md:mt-0">
-              <VapeScene />
+              <div className={`transition-all duration-500 ${scrollY > 100 ? 'scale-110' : 'scale-100'}`}>
+                <VapeScene />
+              </div>
+              <p className="text-center text-sm text-muted-foreground mt-2">Scroll down to see the pod assembly</p>
             </div>
           </div>
         </div>
