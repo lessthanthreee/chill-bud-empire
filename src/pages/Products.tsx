@@ -157,6 +157,7 @@ const Products = () => {
               <li>$6 shipping</li>
               <li className="text-primary font-medium">Save 8%</li>
             </ul>
+            <ProductCard product={products[0]} />
             <Button className="w-full">Add to Cart</Button>
           </div>
           
@@ -168,6 +169,7 @@ const Products = () => {
               <li>Free shipping</li>
               <li className="text-primary font-medium">Save 10%</li>
             </ul>
+            <ProductCard product={products[0]} />
             <Button className="w-full">Add to Cart</Button>
           </div>
         </div>
