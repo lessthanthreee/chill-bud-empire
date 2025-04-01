@@ -149,7 +149,7 @@ const Index = () => {
               </div>
               <div className="hidden md:block relative h-full w-full min-h-[300px]">
                 <img 
-                  src="https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+                  src="/product.png"
                   alt="Vape replacement pod" 
                   className="absolute inset-0 h-full w-full object-cover"
                 />
