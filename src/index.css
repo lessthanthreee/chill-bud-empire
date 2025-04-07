@@ -1,68 +1,69 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 57 31% 97%;  /* Antique White */
-    --foreground: 14 65% 11%;  /* Dark Pastel Red */
-    
-    --card: 57 78% 95%;        /* Papaya Whip */
-    --card-foreground: 14 65% 11%;  /* Dark Pastel Red */
-    
-    --popover: 57 78% 95%;     /* Papaya Whip */
-    --popover-foreground: 14 65% 11%;  /* Dark Pastel Red */
-    
-    --primary: 145 48% 30%;    /* Emerald Green */
-    --primary-foreground: 52 98% 75%;  /* Maximum Yellow */
-    
-    --secondary: 52 87% 75%;   /* Maximum Yellow */
-    --secondary-foreground: 145 48% 30%;  /* Emerald Green */
-    
-    --muted: 57 78% 95%;       /* Papaya Whip */
-    --muted-foreground: 14 30% 45%;  /* Dark Pastel Red */
-    
-    --accent: 52 98% 75%;      /* Maximum Yellow */
-    --accent-foreground: 145 48% 30%;  /* Emerald Green */
-    
-    --destructive: 9 76% 47%;  /* Dark Pastel Red */
-    --destructive-foreground: 57 78% 95%;  /* Papaya Whip */
-    
-    --border: 57 52% 90%;      /* Cosmic Latte */
-    --input: 57 52% 90%;       /* Cosmic Latte */
-    --ring: 145 48% 30%;       /* Emerald Green */
-    
+    --background: 150 50% 99%;
+    --foreground: 150 5% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 150 5% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 5% 10%;
+
+    --primary: 142 40% 45%;
+    --primary-foreground: 144 40% 98%;
+
+    --secondary: 160 15% 95%;
+    --secondary-foreground: 150 5% 10%;
+
+    --muted: 150 10% 94%;
+    --muted-foreground: 150 5% 45%;
+
+    --accent: 96 50% 94%;
+    --accent-foreground: 150 5% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 150 12% 90%;
+    --input: 150 12% 90%;
+    --ring: 142 40% 45%;
+
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 14 65% 11%;  /* Dark Pastel Red */
-    --foreground: 57 31% 97%;  /* Antique White */
-    
-    --card: 14 30% 20%;        /* Darker version of Dark Pastel Red */
-    --card-foreground: 57 31% 97%;  /* Antique White */
-    
-    --popover: 14 30% 20%;     /* Darker version of Dark Pastel Red */
-    --popover-foreground: 57 31% 97%;  /* Antique White */
-    
-    --primary: 52 98% 75%;     /* Maximum Yellow */
-    --primary-foreground: 145 48% 30%;  /* Emerald Green */
-    
-    --secondary: 145 48% 30%;  /* Emerald Green */
-    --secondary-foreground: 52 98% 75%;  /* Maximum Yellow */
-    
-    --muted: 14 30% 25%;       /* Darker Dark Pastel Red */
-    --muted-foreground: 57 31% 80%;  /* Lighter Antique White */
-    
-    --accent: 145 48% 30%;     /* Emerald Green */
-    --accent-foreground: 52 98% 75%;  /* Maximum Yellow */
-    
-    --destructive: 52 98% 75%;  /* Maximum Yellow */
-    --destructive-foreground: 14 65% 11%;  /* Dark Pastel Red */
-    
-    --border: 14 30% 25%;      /* Darker Dark Pastel Red */
-    --input: 14 30% 25%;       /* Darker Dark Pastel Red */
-    --ring: 52 98% 75%;        /* Maximum Yellow */
+    --background: 150 5% 10%;
+    --foreground: 150 10% 98%;
+
+    --card: 150 5% 12%;
+    --card-foreground: 150 10% 98%;
+
+    --popover: 150 5% 12%;
+    --popover-foreground: 150 10% 98%;
+
+    --primary: 142 40% 45%;
+    --primary-foreground: 144 40% 98%;
+
+    --secondary: 150 5% 18%;
+    --secondary-foreground: 150 10% 98%;
+
+    --muted: 150 5% 18%;
+    --muted-foreground: 150 5% 65%;
+
+    --accent: 96 50% 15%;
+    --accent-foreground: 150 10% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 150 10% 98%;
+
+    --border: 150 5% 18%;
+    --input: 150 5% 18%;
+    --ring: 142 40% 45%;
   }
 }
 
