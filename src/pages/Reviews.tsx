@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -14,152 +13,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, StarHalf, ThumbsUp, Filter, MessageSquare } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-// Sample review data
-const reviews = [
-  {
-    id: 1,
-    username: "Michael T.",
-    avatar: "/placeholder.svg",
-    date: "2023-10-15",
-    rating: 5,
-    title: "Excellent product, fast shipping",
-    content: "I've tried Delta 8 from several different companies and this is by far the best. The effect is clean and smooth. Very impressed with the quality and will definitely be ordering again. Shipping was surprisingly fast too.",
-    product: "Delta 8 Gummies - Berry Blast",
-    category: "Edibles",
-    verifiedPurchase: true,
-    helpfulCount: 24,
-    reply: {
-      content: "Thank you for your kind words, Michael! We're so glad you enjoyed our Berry Blast gummies. We look forward to serving you again soon!",
-      date: "2023-10-16"
-    }
-  },
-  {
-    id: 2,
-    username: "Sarah K.",
-    avatar: "/placeholder.svg",
-    date: "2023-09-28",
-    rating: 4,
-    title: "Great for anxiety relief",
-    content: "I've been using the OG Kush vape cartridge for a few weeks now, and it's been amazing for my anxiety. The effects come on quickly and provide relief without making me feel too out of it. My only complaint is that the cartridge seems to go empty a bit faster than expected.",
-    product: "Delta 8 Vape Cartridge - OG Kush",
-    category: "Vapes",
-    verifiedPurchase: true,
-    helpfulCount: 18
-  },
-  {
-    id: 3,
-    username: "David W.",
-    avatar: "/placeholder.svg",
-    date: "2023-09-12",
-    rating: 5,
-    title: "Best sleep aid ever",
-    content: "I've struggled with insomnia for years and have tried everything. These Northern Lights Delta 8 flowers have been a game-changer for my sleep. Just a small amount an hour before bed and I sleep like a baby. The quality is top-notch too.",
-    product: "Delta 8 Flower - Northern Lights",
-    category: "Flower",
-    verifiedPurchase: true,
-    helpfulCount: 32,
-    reply: {
-      content: "We're thrilled to hear that our Northern Lights flower has helped with your sleep, David! Quality rest is so important, and we're glad we could play a part in improving yours.",
-      date: "2023-09-13"
-    }
-  },
-  {
-    id: 4,
-    username: "Jennifer R.",
-    avatar: "/placeholder.svg",
-    date: "2023-08-25",
-    rating: 3,
-    title: "Good product, but shipping was slow",
-    content: "The mint tincture works well for my chronic pain, and I appreciate that it's not too overwhelming. However, my order took over a week to arrive which was longer than expected. The product itself is good though, and I'll likely reorder despite the shipping delay.",
-    product: "Delta 8 Tincture - Mint",
-    category: "Tinctures",
-    verifiedPurchase: true,
-    helpfulCount: 7,
-    reply: {
-      content: "Jennifer, thank you for your feedback. We apologize for the shipping delay you experienced. We've been working on improving our logistics, and we're confident your next order will arrive much faster. We're glad to hear the tincture is helping with your pain management.",
-      date: "2023-08-26"
-    }
-  },
-  {
-    id: 5,
-    username: "Robert M.",
-    avatar: "/placeholder.svg",
-    date: "2023-07-19",
-    rating: 5,
-    title: "Perfect for relaxing after work",
-    content: "These watermelon gummies are my new favorite way to unwind after a long day. The flavor is great, not too artificial, and the effects are perfectly balanced. I feel relaxed but not couch-locked. Will definitely be a repeat customer!",
-    product: "Delta 8 Gummies - Watermelon",
-    category: "Edibles",
-    verifiedPurchase: true,
-    helpfulCount: 15
-  },
-  {
-    id: 6,
-    username: "Lisa B.",
-    avatar: "/placeholder.svg",
-    date: "2023-07-05",
-    rating: 4,
-    title: "Great for focus and creativity",
-    content: "I was skeptical about trying Delta 8, but the Sour Diesel cartridge has been amazing for my creative work. It helps me focus and gets my creative juices flowing without the anxiety I sometimes get from regular cannabis. The only reason for 4 stars instead of 5 is that the effects don't last as long as I'd like.",
-    product: "Delta 8 Vape Cartridge - Sour Diesel",
-    category: "Vapes",
-    verifiedPurchase: true,
-    helpfulCount: 21
-  },
-  {
-    id: 7,
-    username: "Thomas H.",
-    avatar: "/placeholder.svg",
-    date: "2023-06-22",
-    rating: 2,
-    title: "Not as potent as expected",
-    content: "I've used Delta 8 products before, and this unflavored tincture seems much less potent than others I've tried. I need to use almost twice my usual dose to feel effects. The quality seems fine otherwise, just wish it was stronger for the price.",
-    product: "Delta 8 Tincture - Unflavored",
-    category: "Tinctures",
-    verifiedPurchase: true,
-    helpfulCount: 9,
-    reply: {
-      content: "Thomas, thank you for your honest feedback. Different users do have different sensitivities to Delta 8. We'd like to learn more about your experience - our customer service team will reach out to discuss this further and find a solution that works better for you.",
-      date: "2023-06-23"
-    }
-  },
-  {
-    id: 8,
-    username: "Amanda P.",
-    avatar: "/placeholder.svg",
-    date: "2023-05-18",
-    rating: 5,
-    title: "Amazing flavor and effects",
-    content: "The Blue Dream flower exceeded my expectations! The effects are uplifting and perfect for daytime use. I love the subtle blueberry aroma and the smooth smoke. Will definitely purchase again and try other strains.",
-    product: "Delta 8 Flower - Blue Dream",
-    category: "Flower",
-    verifiedPurchase: true,
-    helpfulCount: 27
-  }
-];
-
-// Calculate rating stats
-const calculateRatingStats = () => {
-  const total = reviews.length;
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / total;
-  
-  const starCounts = [0, 0, 0, 0, 0]; // Index 0 = 1 star, Index 4 = 5 stars
-  reviews.forEach(review => {
-    starCounts[review.rating - 1]++;
-  });
-  
-  const starPercentages = starCounts.map(count => (count / total) * 100);
-  
-  return {
-    averageRating,
-    total,
-    starCounts,
-    starPercentages
+interface Review {
+  id: number | string;
+  username: string;
+  avatar: string;
+  date: string;
+  rating: number;
+  title: string;
+  content: string;
+  product: string;
+  category: string;
+  verifiedPurchase: boolean;
+  helpfulCount: number;
+  reply?: {
+    content: string;
+    date: string;
   };
-};
-
-const ratingStats = calculateRatingStats();
+}
 
 // Render star ratings
 const StarRating = ({ rating }: { rating: number }) => {
@@ -186,6 +58,154 @@ const Reviews = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [filterRating, setFilterRating] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Fetch reviews from Supabase
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setIsLoading(true);
+        const { data: dbReviews, error } = await supabase
+          .from('reviews')
+          .select(`
+            *,
+            products (
+              name, category
+            )
+          `)
+          .eq('approved', true);
+        
+        if (error) {
+          throw new Error(error.message);
+        }
+        
+        if (dbReviews && dbReviews.length > 0) {
+          // Transform the data to match our Review interface
+          const transformedReviews: Review[] = dbReviews.map(review => ({
+            id: review.id,
+            username: review.name.split(' ')[0] + ' ' + (review.name.split(' ')[1]?.[0] || '') + '.',
+            avatar: "/placeholder.svg",
+            date: new Date(review.created_at).toISOString().split('T')[0],
+            rating: review.rating,
+            title: review.comment.substring(0, 40) + (review.comment.length > 40 ? '...' : ''),
+            content: review.comment,
+            product: review.products.name,
+            category: review.products.category,
+            verifiedPurchase: true,
+            helpfulCount: Math.floor(Math.random() * 30) // Random number for demo
+          }));
+          
+          setReviews(transformedReviews);
+        } else {
+          // Fallback to sample reviews if no reviews in database
+          setReviews([
+            {
+              id: 1,
+              username: "Michael T.",
+              avatar: "/placeholder.svg",
+              date: "2023-10-15",
+              rating: 5,
+              title: "Excellent product, fast shipping",
+              content: "I've tried Delta 8 from several different companies and this is by far the best. The effect is clean and smooth. Very impressed with the quality and will definitely be ordering again. Shipping was surprisingly fast too.",
+              product: "Delta 8 Gummies - Berry Blast",
+              category: "Edibles",
+              verifiedPurchase: true,
+              helpfulCount: 24,
+              reply: {
+                content: "Thank you for your kind words, Michael! We're so glad you enjoyed our Berry Blast gummies. We look forward to serving you again soon!",
+                date: "2023-10-16"
+              }
+            },
+            {
+              id: 2,
+              username: "Sarah K.",
+              avatar: "/placeholder.svg",
+              date: "2023-09-28",
+              rating: 4,
+              title: "Great for anxiety relief",
+              content: "I've been using the OG Kush vape cartridge for a few weeks now, and it's been amazing for my anxiety. The effects come on quickly and provide relief without making me feel too out of it. My only complaint is that the cartridge seems to go empty a bit faster than expected.",
+              product: "Delta 8 Vape Cartridge - OG Kush",
+              category: "Vapes",
+              verifiedPurchase: true,
+              helpfulCount: 18
+            }
+          ]);
+        }
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+        setError("Failed to load reviews. Please try again later.");
+        setReviews([
+          {
+            id: 1,
+            username: "Michael T.",
+            avatar: "/placeholder.svg",
+            date: "2023-10-15",
+            rating: 5,
+            title: "Excellent product, fast shipping",
+            content: "I've tried Delta 8 from several different companies and this is by far the best. The effect is clean and smooth. Very impressed with the quality and will definitely be ordering again. Shipping was surprisingly fast too.",
+            product: "Delta 8 Gummies - Berry Blast",
+            category: "Edibles",
+            verifiedPurchase: true,
+            helpfulCount: 24,
+            reply: {
+              content: "Thank you for your kind words, Michael! We're so glad you enjoyed our Berry Blast gummies. We look forward to serving you again soon!",
+              date: "2023-10-16"
+            }
+          },
+          {
+            id: 2,
+            username: "Sarah K.",
+            avatar: "/placeholder.svg",
+            date: "2023-09-28",
+            rating: 4,
+            title: "Great for anxiety relief",
+            content: "I've been using the OG Kush vape cartridge for a few weeks now, and it's been amazing for my anxiety. The effects come on quickly and provide relief without making me feel too out of it. My only complaint is that the cartridge seems to go empty a bit faster than expected.",
+            product: "Delta 8 Vape Cartridge - OG Kush",
+            category: "Vapes",
+            verifiedPurchase: true,
+            helpfulCount: 18
+          }
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchReviews();
+  }, []);
+  
+  // Calculate rating stats
+  const calculateRatingStats = () => {
+    if (reviews.length === 0) {
+      return {
+        averageRating: 0,
+        total: 0,
+        starCounts: [0, 0, 0, 0, 0],
+        starPercentages: [0, 0, 0, 0, 0]
+      };
+    }
+    
+    const total = reviews.length;
+    const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / total;
+    
+    const starCounts = [0, 0, 0, 0, 0]; // Index 0 = 1 star, Index 4 = 5 stars
+    reviews.forEach(review => {
+      starCounts[review.rating - 1]++;
+    });
+    
+    const starPercentages = starCounts.map(count => (count / total) * 100);
+    
+    return {
+      averageRating,
+      total,
+      starCounts,
+      starPercentages
+    };
+  };
+  
+  const ratingStats = calculateRatingStats();
   
   // Filter and sort reviews
   const filteredAndSortedReviews = [...reviews]
@@ -217,6 +237,27 @@ const Reviews = () => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
       }
     });
+
+  // Display loading state
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 pt-24">
+        <div className="text-center py-12">
+          <div className="animate-pulse">
+            <div className="h-8 bg-secondary rounded w-1/3 mx-auto mb-4"></div>
+            <div className="h-4 bg-secondary rounded w-1/2 mx-auto mb-12"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="h-96 bg-secondary rounded"></div>
+              <div className="lg:col-span-2 space-y-4">
+                <div className="h-6 bg-secondary rounded w-1/4"></div>
+                <div className="h-64 bg-secondary rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
@@ -420,7 +461,7 @@ const Reviews = () => {
                               <AvatarFallback>DC</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="text-sm font-medium">Delta Cannabis</p>
+                              <p className="text-sm font-medium">Cleveland Cartridge Co</p>
                               <p className="text-xs text-muted-foreground">
                                 {new Date(review.reply.date).toLocaleDateString('en-US', { 
                                   year: 'numeric', 

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Sheet,
@@ -24,6 +23,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 type ShippingInfo = {
   name: string;
@@ -58,6 +58,7 @@ const CartSidebar = () => {
   });
   const [selectedCrypto, setSelectedCrypto] = useState<CryptoOptions>('btc');
   const [copiedAddress, setCopiedAddress] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleShippingInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,22 +91,108 @@ const CartSidebar = () => {
     });
   };
 
-  const handleOrderComplete = () => {
-    toast({
-      title: "Order submitted!",
-      description: "Thank you for your order. We'll ship your items soon.",
-    });
-    clearCart();
-    closeCart();
-    setCheckoutStep('cart');
-    setShippingInfo({
-      name: '',
-      email: '',
-      address: '',
-      city: '',
-      state: '',
-      zipCode: ''
-    });
+  const handleOrderComplete = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_name: shippingInfo.name,
+          customer_email: shippingInfo.email,
+          shipping_address: shippingInfo.address,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          zip_code: shippingInfo.zipCode,
+          order_total: cartTotal,
+          payment_method: selectedCrypto,
+          payment_address: cryptoAddresses[selectedCrypto],
+          payment_status: 'pending',
+          shipping_status: 'processing'
+        })
+        .select();
+
+      if (orderError) {
+        throw new Error(`Failed to create order: ${orderError.message}`);
+      }
+      
+      const orderId = orderData[0].id;
+      
+      const orderItems = cart.map(item => ({
+        order_id: orderId,
+        product_id: item.product.id,
+        quantity: item.quantity,
+        price: item.product.price,
+        subscription: item.subscription || null
+      }));
+      
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+        
+      if (itemsError) {
+        throw new Error(`Failed to add order items: ${itemsError.message}`);
+      }
+      
+      const orderDataForEmail = {
+        customerName: shippingInfo.name,
+        customerEmail: shippingInfo.email,
+        shippingAddress: shippingInfo.address,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        zipCode: shippingInfo.zipCode,
+        orderTotal: cartTotal,
+        paymentMethod: selectedCrypto,
+        paymentAddress: cryptoAddresses[selectedCrypto],
+        items: cart.map(item => ({
+          productName: item.product.name,
+          quantity: item.quantity,
+          price: item.product.price,
+          subscription: item.subscription
+        }))
+      };
+      
+      const notifyResponse = await fetch("https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderData: orderDataForEmail })
+      });
+      
+      const notifyResult = await notifyResponse.json();
+      
+      if (!notifyResponse.ok) {
+        console.error("Email notification failed:", notifyResult);
+      }
+
+      toast({
+        title: "Order submitted!",
+        description: "Thank you for your order. We'll ship your items soon.",
+      });
+      
+      clearCart();
+      closeCart();
+      setCheckoutStep('cart');
+      setShippingInfo({
+        name: '',
+        email: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: ''
+      });
+      
+    } catch (error) {
+      console.error("Order submission error:", error);
+      toast({
+        title: "Order failed",
+        description: "There was an error processing your order. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCloseCart = () => {
@@ -389,13 +476,18 @@ const CartSidebar = () => {
             <span>${cartTotal.toFixed(2)}</span>
           </div>
           <div className="flex flex-col gap-2 pt-2">
-            <Button onClick={handleOrderComplete} className="w-full">
-              I've Sent Payment
+            <Button 
+              onClick={handleOrderComplete} 
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Processing..." : "I've Sent Payment"}
             </Button>
             <Button 
               variant="outline" 
               onClick={() => setCheckoutStep('shipping')} 
               className="w-full"
+              disabled={isSubmitting}
             >
               Back to Shipping
             </Button>
