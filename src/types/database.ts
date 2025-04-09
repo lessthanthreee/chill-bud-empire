@@ -67,3 +67,8 @@ export interface ContactMessage {
   read: boolean;
   created_at: string;
 }
+
+// Additional type for enhanced reviews with UI-specific properties
+export interface ReviewWithUI extends Review {
+  expanded?: boolean;
+}

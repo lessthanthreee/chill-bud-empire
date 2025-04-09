@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product as DatabaseProduct } from "@/types/database";
 
@@ -12,8 +13,8 @@ type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addToCart: (product: Product, quantity?: number, subscription?: "none" | "biweekly" | "monthly") => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   toggleCart: () => void;
@@ -85,11 +86,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;

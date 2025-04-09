@@ -13,15 +13,6 @@ import { useCart } from "@/context/CartContext";
 import CartItem from "./CartItem";
 import { ShoppingCart, Truck, Bitcoin, Clipboard, CheckCircle2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger,
-  DialogFooter
-} from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Order, OrderItem } from "@/types/database";
@@ -96,7 +87,7 @@ const CartSidebar = () => {
     try {
       setIsSubmitting(true);
       
-      const orderData = {
+      const orderPayload = {
         customer_name: shippingInfo.name,
         customer_email: shippingInfo.email,
         shipping_address: shippingInfo.address,
@@ -110,20 +101,21 @@ const CartSidebar = () => {
         shipping_status: 'processing'
       };
       
-      const { data: orderData, error: orderError } = await supabase
+      const { data, error: orderError } = await supabase
         .from('orders')
-        .insert(orderData)
+        .insert(orderPayload)
         .select();
 
       if (orderError) {
         throw new Error(`Failed to create order: ${orderError.message}`);
       }
       
-      if (!orderData || orderData.length === 0) {
+      if (!data || data.length === 0) {
         throw new Error("Order was created but no data was returned");
       }
       
-      const orderId = orderData[0].id;
+      const createdOrder = data[0] as Order;
+      const orderId = createdOrder.id;
       
       const orderItems = cart.map(item => ({
         order_id: orderId,
