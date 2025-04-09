@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { Star } from "lucide-react"; // Using Lucide icons instead of Radix UI icons
 import { toast } from "@/components/ui/use-toast";
 
 const Reviews = () => {
@@ -157,9 +157,9 @@ const Reviews = () => {
       .map((_, i) => (
         <span key={i} className="inline-block">
           {i < count ? (
-            <StarFilledIcon className="h-4 w-4 text-yellow-500" />
+            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
           ) : (
-            <StarIcon className="h-4 w-4 text-gray-300" />
+            <Star className="h-4 w-4 text-gray-300" />
           )}
         </span>
       ));
@@ -293,9 +293,9 @@ const Reviews = () => {
                         className="focus:outline-none"
                       >
                         {star <= rating ? (
-                          <StarFilledIcon className="h-6 w-6 text-yellow-500" />
+                          <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
                         ) : (
-                          <StarIcon className="h-6 w-6 text-gray-300" />
+                          <Star className="h-6 w-6 text-gray-300" />
                         )}
                       </button>
                     ))}
@@ -328,3 +328,4 @@ const Reviews = () => {
 };
 
 export default Reviews;
+
