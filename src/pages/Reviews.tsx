@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Review, ReviewWithUI } from "@/types/database";
@@ -56,7 +55,6 @@ const Reviews = () => {
         }
       } catch (error) {
         console.error("Error fetching reviews:", error);
-        // Use sample reviews as fallback
         setReviews([
           {
             id: "1",
@@ -102,7 +100,6 @@ const Reviews = () => {
     setIsSubmitting(true);
 
     try {
-      // Default to the first product in case no selection
       const targetProductId = productId || "1"; 
 
       const { error } = await supabase.from("reviews").insert([
@@ -123,7 +120,6 @@ const Reviews = () => {
         description: "Thank you for your feedback. Your review will be visible after moderation.",
       });
 
-      // Reset form
       setName("");
       setEmail("");
       setRating(5);
@@ -328,4 +324,3 @@ const Reviews = () => {
 };
 
 export default Reviews;
-

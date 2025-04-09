@@ -1,8 +1,5 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product as DatabaseProduct } from "@/types/database";
-
-export type Product = DatabaseProduct;
+import { Product } from "@/types/database";
 
 type CartItem = {
   product: Product;

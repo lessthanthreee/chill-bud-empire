@@ -15,7 +15,7 @@ import { ShoppingCart, Truck, Bitcoin, Clipboard, CheckCircle2 } from "lucide-re
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Order, OrderItem } from "@/types/database";
+import { Order } from "@/types/database";
 
 type ShippingInfo = {
   name: string;
@@ -498,7 +498,7 @@ const CartSidebar = () => {
 
   return (
     <Sheet open={isCartOpen} onOpenChange={handleCloseCart}>
-      <SheetContent className="w-full sm:max-w-md flex flex-col">
+      <SheetContent className="w-full sm:max-w-md flex flex-col" side="left">
         <SheetHeader>
           <SheetTitle className="flex items-center">
             {checkoutStep === 'cart' && (
