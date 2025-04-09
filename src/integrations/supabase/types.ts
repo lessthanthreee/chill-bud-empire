@@ -9,7 +9,188 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          id: string
+          order_id: string | null
+          price: number
+          product_id: string | null
+          quantity: number
+          subscription: string | null
+        }
+        Insert: {
+          id?: string
+          order_id?: string | null
+          price: number
+          product_id?: string | null
+          quantity: number
+          subscription?: string | null
+        }
+        Update: {
+          id?: string
+          order_id?: string | null
+          price?: number
+          product_id?: string | null
+          quantity?: number
+          subscription?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          city: string
+          created_at: string | null
+          customer_email: string
+          customer_name: string
+          id: string
+          order_total: number
+          payment_address: string
+          payment_method: string
+          payment_status: string
+          shipping_address: string
+          shipping_status: string
+          state: string
+          zip_code: string
+        }
+        Insert: {
+          city: string
+          created_at?: string | null
+          customer_email: string
+          customer_name: string
+          id?: string
+          order_total: number
+          payment_address: string
+          payment_method: string
+          payment_status?: string
+          shipping_address: string
+          shipping_status?: string
+          state: string
+          zip_code: string
+        }
+        Update: {
+          city?: string
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string
+          id?: string
+          order_total?: number
+          payment_address?: string
+          payment_method?: string
+          payment_status?: string
+          shipping_address?: string
+          shipping_status?: string
+          state?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          cbd: string | null
+          created_at: string | null
+          description: string | null
+          effects: string[] | null
+          featured: boolean | null
+          id: string
+          image: string | null
+          inventory: number | null
+          name: string
+          price: number
+          strain: string | null
+          thc: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          cbd?: string | null
+          created_at?: string | null
+          description?: string | null
+          effects?: string[] | null
+          featured?: boolean | null
+          id?: string
+          image?: string | null
+          inventory?: number | null
+          name: string
+          price: number
+          strain?: string | null
+          thc?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          cbd?: string | null
+          created_at?: string | null
+          description?: string | null
+          effects?: string[] | null
+          featured?: boolean | null
+          id?: string
+          image?: string | null
+          inventory?: number | null
+          name?: string
+          price?: number
+          strain?: string | null
+          thc?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          approved: boolean | null
+          comment: string
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          product_id: string | null
+          rating: number
+        }
+        Insert: {
+          approved?: boolean | null
+          comment: string
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          product_id?: string | null
+          rating: number
+        }
+        Update: {
+          approved?: boolean | null
+          comment?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          product_id?: string | null
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

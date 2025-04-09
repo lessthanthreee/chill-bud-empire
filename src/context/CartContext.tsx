@@ -1,113 +1,75 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product } from "@/types/database";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { Product } from '@/types/database';
 
-type CartItem = {
+export interface CartItem {
   product: Product;
   quantity: number;
-  subscription?: "none" | "biweekly" | "monthly";
-};
+  subscription?: 'none' | 'biweekly' | 'monthly';
+}
 
-type CartContextType = {
+interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity?: number, subscription?: "none" | "biweekly" | "monthly") => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
   isCartOpen: boolean;
-  toggleCart: () => void;
+  subtotal: number;
+  cartTotal: number;
+  shippingCost: number;
+  addToCart: (product: Product, quantity: number, subscription?: 'none' | 'biweekly' | 'monthly') => void;
+  removeFromCart: (productId: string) => void;
+  clearCart: () => void;
   closeCart: () => void;
   openCart: () => void;
-  cartTotal: number;
-  cartCount: number;
-  subtotal: number;
-  shippingCost: number;
-};
+}
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartTotal, setCartTotal] = useState(0);
-  const [cartCount, setCartCount] = useState(0);
-  const [subtotal, setSubtotal] = useState(0);
-  const [shippingCost, setShippingCost] = useState(0);
+interface CartProviderProps {
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Failed to parse cart data from localStorage", error);
-        localStorage.removeItem("cart");
-      }
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const storedCart = localStorage.getItem('cart');
+      return storedCart ? JSON.parse(storedCart) : [];
     }
-  }, []);
+    return [];
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    
-    const subtotalAmount = cart.reduce((sum, item) => {
-      return sum + (item.product.price * item.quantity);
-    }, 0);
-    
-    setSubtotal(subtotalAmount);
-    
-    const shipping = subtotalAmount >= 75 ? 0 : 6;
-    setShippingCost(shipping);
-    
-    setCartTotal(subtotalAmount + shipping);
-    
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    setCartCount(count);
+    localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: Product, quantity = 1, subscription?: "none" | "biweekly" | "monthly") => {
+  const calculateSubtotal = () => {
+    return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  };
+
+  const subtotal = calculateSubtotal();
+
+  const shippingCost = subtotal > 75 ? 0 : 6;
+
+  const cartTotal = subtotal + shippingCost;
+
+  const addToCart = (product: Product, quantity: number, subscription: 'none' | 'biweekly' | 'monthly' = 'none') => {
     setCart(prevCart => {
-      const existingItemIndex = prevCart.findIndex(
-        item => item.product.id === product.id && item.subscription === subscription
-      );
-      
-      if (existingItemIndex >= 0) {
-        return prevCart.map((item, index) => 
-          index === existingItemIndex
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      const existingItemIndex = prevCart.findIndex(item => item.product.id === product.id && item.subscription === subscription);
+
+      if (existingItemIndex > -1) {
+        const newCart = [...prevCart];
+        newCart[existingItemIndex].quantity += quantity;
+        return newCart;
       } else {
         return [...prevCart, { product, quantity, subscription }];
       }
     });
-    
-    setIsCartOpen(true);
   };
 
   const removeFromCart = (productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
-    
-    setCart(prevCart => 
-      prevCart.map(item => 
-        item.product.id === productId 
-          ? { ...item, quantity } 
-          : item
-      )
-    );
-  };
-
   const clearCart = () => {
     setCart([]);
-  };
-
-  const toggleCart = () => {
-    setIsCartOpen(prev => !prev);
   };
 
   const closeCart = () => {
@@ -118,24 +80,21 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setIsCartOpen(true);
   };
 
+  const value: CartContextType = {
+    cart,
+    isCartOpen,
+    subtotal,
+    cartTotal,
+    shippingCost,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    closeCart,
+    openCart,
+  };
+
   return (
-    <CartContext.Provider 
-      value={{ 
-        cart, 
-        addToCart, 
-        removeFromCart, 
-        updateQuantity,
-        clearCart,
-        isCartOpen,
-        toggleCart,
-        closeCart,
-        openCart,
-        cartTotal,
-        cartCount,
-        subtotal,
-        shippingCost
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
@@ -144,7 +103,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider");
+    throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 };

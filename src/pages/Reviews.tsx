@@ -5,15 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Star } from "lucide-react"; // Using Lucide icons instead of Radix UI icons
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Star } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 const Reviews = () => {
@@ -70,22 +63,7 @@ const Reviews = () => {
               name: "Premium Vape Replacement Pod",
               category: "Vapes",
             },
-          },
-          {
-            id: "2",
-            product_id: "1",
-            name: "Sarah Johnson",
-            email: "sarah@example.com",
-            rating: 4,
-            comment: "Good quality product, fast shipping. The only reason I'm not giving 5 stars is because I had a small issue with one pod leaking, but customer service was excellent in handling it.",
-            approved: true,
-            created_at: "2024-02-15T00:00:00Z",
-            expanded: false,
-            products: {
-              name: "Premium Vape Replacement Pod",
-              category: "Vapes",
-            },
-          },
+          }
         ]);
       } finally {
         setIsLoading(false);
@@ -100,17 +78,15 @@ const Reviews = () => {
     setIsSubmitting(true);
 
     try {
-      const targetProductId = productId || "1"; 
-
       const { error } = await supabase.from("reviews").insert([
         {
-          product_id: targetProductId,
+          product_id: productId || "1",
           name,
           email,
           rating,
           comment,
           approved: false,
-        },
+        }
       ]);
 
       if (error) throw error;

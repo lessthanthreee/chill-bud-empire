@@ -2,14 +2,18 @@
 export interface Product {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  image: string;
-  category: string;
-  featured: boolean;
-  inventory: number;
-  thc: string;
-  cbd: string;
+  image?: string;
+  category?: string;
+  featured?: boolean;
+  inventory?: number;
+  thc?: string;
+  cbd?: string;
+  strain?: string;
+  effects?: string[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Review {
@@ -19,8 +23,8 @@ export interface Review {
   email: string;
   rating: number;
   comment: string;
-  approved: boolean;
-  created_at: string;
+  approved?: boolean;
+  created_at?: string;
   products?: {
     name: string;
     category: string;
@@ -44,7 +48,7 @@ export interface Order {
   payment_address: string;
   payment_status: string;
   shipping_status: string;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface OrderItem {
@@ -53,5 +57,5 @@ export interface OrderItem {
   product_id: string;
   quantity: number;
   price: number;
-  subscription: string | null;
+  subscription?: string;
 }

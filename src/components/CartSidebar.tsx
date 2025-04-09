@@ -15,7 +15,7 @@ import { ShoppingCart, Truck, Bitcoin, Clipboard, CheckCircle2 } from "lucide-re
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Order } from "@/types/database";
+import { Order, OrderItem } from "@/types/database";
 
 type ShippingInfo = {
   name: string;
@@ -117,7 +117,7 @@ const CartSidebar = () => {
       const createdOrder = data[0] as Order;
       const orderId = createdOrder.id;
       
-      const orderItems = cart.map(item => ({
+      const orderItems: OrderItem[] = cart.map(item => ({
         order_id: orderId,
         product_id: item.product.id,
         quantity: item.quantity,
