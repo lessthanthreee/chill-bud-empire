@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,17 +15,15 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, StarHalf, ThumbsUp, Filter, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Review } from "@/types/database";
 
-interface Review {
-  id: number | string;
+interface ReviewWithUI extends Review {
   username: string;
   avatar: string;
   date: string;
-  rating: number;
   title: string;
   content: string;
   product: string;
-  category: string;
   verifiedPurchase: boolean;
   helpfulCount: number;
   reply?: {
@@ -58,7 +57,7 @@ const Reviews = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [filterRating, setFilterRating] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewWithUI[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -82,20 +81,22 @@ const Reviews = () => {
         }
         
         if (dbReviews && dbReviews.length > 0) {
-          // Transform the data to match our Review interface
-          const transformedReviews: Review[] = dbReviews.map(review => ({
-            id: review.id,
-            username: review.name.split(' ')[0] + ' ' + (review.name.split(' ')[1]?.[0] || '') + '.',
-            avatar: "/placeholder.svg",
-            date: new Date(review.created_at).toISOString().split('T')[0],
-            rating: review.rating,
-            title: review.comment.substring(0, 40) + (review.comment.length > 40 ? '...' : ''),
-            content: review.comment,
-            product: review.products.name,
-            category: review.products.category,
-            verifiedPurchase: true,
-            helpfulCount: Math.floor(Math.random() * 30) // Random number for demo
-          }));
+          // Transform the data to match our ReviewWithUI interface
+          const transformedReviews: ReviewWithUI[] = dbReviews.map(review => {
+            const typedReview = review as unknown as Review;
+            return {
+              ...typedReview,
+              username: typedReview.name.split(' ')[0] + ' ' + (typedReview.name.split(' ')[1]?.[0] || '') + '.',
+              avatar: "/placeholder.svg",
+              date: new Date(typedReview.created_at).toISOString().split('T')[0],
+              title: typedReview.comment.substring(0, 40) + (typedReview.comment.length > 40 ? '...' : ''),
+              content: typedReview.comment,
+              product: typedReview.products?.name || "Unknown Product",
+              category: typedReview.products?.category || "Unknown Category",
+              verifiedPurchase: true,
+              helpfulCount: Math.floor(Math.random() * 30) // Random number for demo
+            };
+          });
           
           setReviews(transformedReviews);
         } else {

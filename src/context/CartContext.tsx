@@ -1,18 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Product as DatabaseProduct } from "@/types/database";
 
-export type Product = {
-  id: number;
-  name: string;
-  category: string;
-  description: string;
-  price: number;
-  image: string;
-  thc: string;
-  cbd: string;
-  strain?: string;
-  effects?: string[];
-  featured?: boolean;
-};
+export type Product = DatabaseProduct;
 
 type CartItem = {
   product: Product;

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Order, OrderItem } from "@/types/database";
 
 type ShippingInfo = {
   name: string;
@@ -95,25 +96,31 @@ const CartSidebar = () => {
     try {
       setIsSubmitting(true);
       
+      const orderData = {
+        customer_name: shippingInfo.name,
+        customer_email: shippingInfo.email,
+        shipping_address: shippingInfo.address,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        zip_code: shippingInfo.zipCode,
+        order_total: cartTotal,
+        payment_method: selectedCrypto,
+        payment_address: cryptoAddresses[selectedCrypto],
+        payment_status: 'pending',
+        shipping_status: 'processing'
+      };
+      
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
-        .insert({
-          customer_name: shippingInfo.name,
-          customer_email: shippingInfo.email,
-          shipping_address: shippingInfo.address,
-          city: shippingInfo.city,
-          state: shippingInfo.state,
-          zip_code: shippingInfo.zipCode,
-          order_total: cartTotal,
-          payment_method: selectedCrypto,
-          payment_address: cryptoAddresses[selectedCrypto],
-          payment_status: 'pending',
-          shipping_status: 'processing'
-        })
+        .insert(orderData)
         .select();
 
       if (orderError) {
         throw new Error(`Failed to create order: ${orderError.message}`);
+      }
+      
+      if (!orderData || orderData.length === 0) {
+        throw new Error("Order was created but no data was returned");
       }
       
       const orderId = orderData[0].id;

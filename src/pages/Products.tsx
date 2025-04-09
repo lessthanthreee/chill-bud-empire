@@ -1,23 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Truck, ShieldCheck, CreditCard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  description: string;
-  price: number;
-  image: string;
-  thc: string;
-  cbd: string;
-  strain: string;
-  effects: string[];
-  featured: boolean;
-}
+import { Product } from "@/types/database";
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,11 +24,11 @@ const Products = () => {
         }
 
         if (data && data.length > 0) {
-          setProducts(data);
+          setProducts(data as Product[]);
         } else {
           // Fallback to sample product if no products in database
           setProducts([{
-            id: 1,
+            id: '1',
             name: "Premium Vape Replacement Pod",
             category: "Vapes",
             description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
@@ -52,7 +38,9 @@ const Products = () => {
             cbd: "N/A",
             strain: "N/A",
             effects: ["Smooth Vapor", "Consistent Flavor"],
-            featured: true
+            featured: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
           }]);
         }
       } catch (err) {
@@ -60,7 +48,7 @@ const Products = () => {
         setError("Failed to load products. Please try again later.");
         // Use sample product as fallback
         setProducts([{
-          id: 1,
+          id: '1',
           name: "Premium Vape Replacement Pod",
           category: "Vapes",
           description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
@@ -70,7 +58,9 @@ const Products = () => {
           cbd: "N/A", 
           strain: "N/A",
           effects: ["Smooth Vapor", "Consistent Flavor"],
-          featured: true
+          featured: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         }]);
       } finally {
         setIsLoading(false);

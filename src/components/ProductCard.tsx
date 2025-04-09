@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useCart, Product } from "@/context/CartContext";
+import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
 import { 
   Tooltip, 
@@ -13,6 +13,7 @@ import {
   TooltipTrigger 
 } from "@/components/ui/tooltip";
 import { toast } from "@/components/ui/use-toast";
+import { Product } from "@/types/database";
 
 interface ProductCardProps {
   product: Product;
