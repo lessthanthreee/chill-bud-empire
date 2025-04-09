@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,8 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Product, useCart } from "@/context/CartContext";
+import { useCart } from "@/context/CartContext";
+import { Product } from "@/types/database";
 import { ChevronLeft, Minus, Plus, ShieldCheck, CalendarClock, Sparkles } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

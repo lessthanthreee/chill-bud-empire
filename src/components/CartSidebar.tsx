@@ -117,12 +117,12 @@ const CartSidebar = () => {
       const createdOrder = data[0] as Order;
       const orderId = createdOrder.id;
       
-      const orderItems: OrderItem[] = cart.map(item => ({
+      const orderItems = cart.map(item => ({
         order_id: orderId,
         product_id: item.product.id,
         quantity: item.quantity,
         price: item.product.price,
-        subscription: item.subscription || null
+        subscription: item.subscription || undefined
       }));
       
       const { error: itemsError } = await supabase
@@ -133,38 +133,6 @@ const CartSidebar = () => {
         throw new Error(`Failed to add order items: ${itemsError.message}`);
       }
       
-      const orderDataForEmail = {
-        customerName: shippingInfo.name,
-        customerEmail: shippingInfo.email,
-        shippingAddress: shippingInfo.address,
-        city: shippingInfo.city,
-        state: shippingInfo.state,
-        zipCode: shippingInfo.zipCode,
-        orderTotal: cartTotal,
-        paymentMethod: selectedCrypto,
-        paymentAddress: cryptoAddresses[selectedCrypto],
-        items: cart.map(item => ({
-          productName: item.product.name,
-          quantity: item.quantity,
-          price: item.product.price,
-          subscription: item.subscription
-        }))
-      };
-      
-      const notifyResponse = await fetch("https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ orderData: orderDataForEmail })
-      });
-      
-      const notifyResult = await notifyResponse.json();
-      
-      if (!notifyResponse.ok) {
-        console.error("Email notification failed:", notifyResult);
-      }
-
       toast({
         title: "Order submitted!",
         description: "Thank you for your order. We'll ship your items soon.",
@@ -201,54 +169,160 @@ const CartSidebar = () => {
     }
   };
 
-  const renderCartStep = () => (
-    <>
-      <div className="flex-1 overflow-y-auto py-4">
-        {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">Your cart is empty</p>
-            <Button 
-              variant="link" 
-              className="mt-2" 
-              onClick={handleCloseCart}
-            >
-              Continue Shopping
-            </Button>
-          </div>
-        ) : (
-          <div>
-            {cart.map((item) => (
-              <CartItem
-                key={item.product.id}
-                id={item.product.id}
-                name={item.product.name}
-                price={item.product.price}
-                image={item.product.image}
-                quantity={item.quantity}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+  function renderCartStep() {
+    return (
+      <>
+        <div className="flex-1 overflow-y-auto py-4">
+          {cart.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">Your cart is empty</p>
+              <Button 
+                variant="link" 
+                className="mt-2" 
+                onClick={handleCloseCart}
+              >
+                Continue Shopping
+              </Button>
+            </div>
+          ) : (
+            <div>
+              {cart.map((item) => (
+                <CartItem
+                  key={item.product.id}
+                  id={item.product.id}
+                  name={item.product.name}
+                  price={item.product.price}
+                  image={item.product.image || ''}
+                  quantity={item.quantity}
+                />
+              ))}
+            </div>
+          )}
+        </div>
 
-      {cart.length > 0 && (
+        {cart.length > 0 && (
+          <SheetFooter className="border-t border-border pt-4">
+            <div className="w-full space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-base">Subtotal</span>
+                <span className="text-base font-medium">
+                  ${subtotal.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-base flex items-center">
+                  <Truck className="h-4 w-4 mr-2" />
+                  Shipping
+                  {shippingCost === 0 && (
+                    <span className="text-xs text-green-500 ml-2">(Free over $75)</span>
+                  )}
+                </span>
+                <span className="text-base font-medium">
+                  {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
+                </span>
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between font-semibold">
+                <span>Total</span>
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
+              <div className="flex flex-col gap-2 pt-2">
+                <Button onClick={handleProceedToShipping} className="w-full">
+                  Checkout
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={clearCart} 
+                  className="w-full"
+                >
+                  Clear Cart
+                </Button>
+              </div>
+            </div>
+          </SheetFooter>
+        )}
+      </>
+    );
+  }
+
+  function renderShippingStep() {
+    return (
+      <form onSubmit={handleProceedToPayment} className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto py-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Full Name</Label>
+            <Input 
+              id="name" 
+              name="name" 
+              value={shippingInfo.name} 
+              onChange={handleShippingInfoChange} 
+              required 
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input 
+              id="email" 
+              name="email" 
+              type="email" 
+              value={shippingInfo.email} 
+              onChange={handleShippingInfoChange} 
+              required 
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">Shipping Address</Label>
+            <Input 
+              id="address" 
+              name="address" 
+              value={shippingInfo.address} 
+              onChange={handleShippingInfoChange} 
+              required 
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Input 
+                id="city" 
+                name="city" 
+                value={shippingInfo.city} 
+                onChange={handleShippingInfoChange} 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="state">State</Label>
+              <Input 
+                id="state" 
+                name="state" 
+                value={shippingInfo.state} 
+                onChange={handleShippingInfoChange} 
+                required 
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="zipCode">ZIP Code</Label>
+            <Input 
+              id="zipCode" 
+              name="zipCode" 
+              value={shippingInfo.zipCode} 
+              onChange={handleShippingInfoChange} 
+              required 
+            />
+          </div>
+        </div>
+
         <SheetFooter className="border-t border-border pt-4">
           <div className="w-full space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-base">Subtotal</span>
-              <span className="text-base font-medium">
-                ${subtotal.toFixed(2)}
-              </span>
+              <span className="text-base font-medium">${subtotal.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-base flex items-center">
-                <Truck className="h-4 w-4 mr-2" />
-                Shipping
-                {shippingCost === 0 && (
-                  <span className="text-xs text-green-500 ml-2">(Free over $75)</span>
-                )}
-              </span>
+              <span className="text-base">Shipping</span>
               <span className="text-base font-medium">
                 {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
               </span>
@@ -259,242 +333,142 @@ const CartSidebar = () => {
               <span>${cartTotal.toFixed(2)}</span>
             </div>
             <div className="flex flex-col gap-2 pt-2">
-              <Button onClick={handleProceedToShipping} className="w-full">
-                Checkout
+              <Button type="submit" className="w-full">
+                Proceed to Payment
               </Button>
               <Button 
+                type="button"
                 variant="outline" 
-                onClick={clearCart} 
+                onClick={() => setCheckoutStep('cart')} 
                 className="w-full"
               >
-                Clear Cart
+                Back to Cart
               </Button>
             </div>
           </div>
         </SheetFooter>
-      )}
-    </>
-  );
+      </form>
+    );
+  }
 
-  const renderShippingStep = () => (
-    <form onSubmit={handleProceedToPayment} className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto py-4 space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
-          <Input 
-            id="name" 
-            name="name" 
-            value={shippingInfo.name} 
-            onChange={handleShippingInfoChange} 
-            required 
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            name="email" 
-            type="email" 
-            value={shippingInfo.email} 
-            onChange={handleShippingInfoChange} 
-            required 
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="address">Shipping Address</Label>
-          <Input 
-            id="address" 
-            name="address" 
-            value={shippingInfo.address} 
-            onChange={handleShippingInfoChange} 
-            required 
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input 
-              id="city" 
-              name="city" 
-              value={shippingInfo.city} 
-              onChange={handleShippingInfoChange} 
-              required 
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="state">State</Label>
-            <Input 
-              id="state" 
-              name="state" 
-              value={shippingInfo.state} 
-              onChange={handleShippingInfoChange} 
-              required 
-            />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="zipCode">ZIP Code</Label>
-          <Input 
-            id="zipCode" 
-            name="zipCode" 
-            value={shippingInfo.zipCode} 
-            onChange={handleShippingInfoChange} 
-            required 
-          />
-        </div>
-      </div>
-
-      <SheetFooter className="border-t border-border pt-4">
-        <div className="w-full space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-base">Subtotal</span>
-            <span className="text-base font-medium">${subtotal.toFixed(2)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-base">Shipping</span>
-            <span className="text-base font-medium">
-              {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
-            </span>
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between font-semibold">
-            <span>Total</span>
-            <span>${cartTotal.toFixed(2)}</span>
-          </div>
-          <div className="flex flex-col gap-2 pt-2">
-            <Button type="submit" className="w-full">
-              Proceed to Payment
-            </Button>
-            <Button 
-              type="button"
-              variant="outline" 
-              onClick={() => setCheckoutStep('cart')} 
-              className="w-full"
-            >
-              Back to Cart
-            </Button>
-          </div>
-        </div>
-      </SheetFooter>
-    </form>
-  );
-
-  const renderPaymentStep = () => (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto py-4 space-y-6">
-        <div>
-          <h3 className="font-medium mb-2">Select Payment Method</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            We accept cryptocurrency payments only. Select your preferred crypto:
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            <Button 
-              variant={selectedCrypto === 'btc' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('btc')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> Bitcoin
-            </Button>
-            <Button 
-              variant={selectedCrypto === 'eth' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('eth')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> Ethereum
-            </Button>
-            <Button 
-              variant={selectedCrypto === 'doge' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('doge')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> Dogecoin
-            </Button>
-            <Button 
-              variant={selectedCrypto === 'sol' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('sol')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> Solana
-            </Button>
-            <Button 
-              variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('bnb')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> BNB
-            </Button>
-            <Button 
-              variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
-              className="justify-start"
-              onClick={() => handleSelectCrypto('nano')}
-            >
-              <Bitcoin className="h-4 w-4 mr-2" /> Nano
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="font-medium">Send Payment To:</h3>
-          <div className="flex flex-col space-y-2">
-            <div className="p-3 bg-secondary rounded-md break-all text-xs font-mono">
-              {cryptoAddresses[selectedCrypto]}
+  function renderPaymentStep() {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto py-4 space-y-6">
+          <div>
+            <h3 className="font-medium mb-2">Select Payment Method</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              We accept cryptocurrency payments only. Select your preferred crypto:
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button 
+                variant={selectedCrypto === 'btc' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('btc')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> Bitcoin
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'eth' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('eth')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> Ethereum
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'doge' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('doge')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> Dogecoin
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'sol' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('sol')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> Solana
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('bnb')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> BNB
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('nano')}
+              >
+                <Bitcoin className="h-4 w-4 mr-2" /> Nano
+              </Button>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex items-center"
-              onClick={handleCopyAddress}
-            >
-              {copiedAddress ? 
-                <><CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Copied!</> : 
-                <><Clipboard className="h-4 w-4 mr-2" /> Copy Address</>
-              }
-            </Button>
           </div>
-          <p className="text-sm text-muted-foreground mt-4">
-            Please send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
-            Once payment is complete, click "I've Sent Payment" below.
-          </p>
+
+          <div className="space-y-2">
+            <h3 className="font-medium">Send Payment To:</h3>
+            <div className="flex flex-col space-y-2">
+              <div className="p-3 bg-secondary rounded-md break-all text-xs font-mono">
+                {cryptoAddresses[selectedCrypto]}
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center"
+                onClick={handleCopyAddress}
+              >
+                {copiedAddress ? 
+                  <><CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Copied!</> : 
+                  <><Clipboard className="h-4 w-4 mr-2" /> Copy Address</>
+                }
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              Please send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
+              Once payment is complete, click "I've Sent Payment" below.
+            </p>
+          </div>
+
+          <div className="bg-secondary/50 p-4 rounded-lg">
+            <h3 className="font-medium mb-2">Shipping Information</h3>
+            <div className="text-sm space-y-1">
+              <p><span className="font-medium">Name:</span> {shippingInfo.name}</p>
+              <p><span className="font-medium">Email:</span> {shippingInfo.email}</p>
+              <p><span className="font-medium">Address:</span> {shippingInfo.address}</p>
+              <p><span className="font-medium">City:</span> {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}</p>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-secondary/50 p-4 rounded-lg">
-          <h3 className="font-medium mb-2">Shipping Information</h3>
-          <div className="text-sm space-y-1">
-            <p><span className="font-medium">Name:</span> {shippingInfo.name}</p>
-            <p><span className="font-medium">Email:</span> {shippingInfo.email}</p>
-            <p><span className="font-medium">Address:</span> {shippingInfo.address}</p>
-            <p><span className="font-medium">City:</span> {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}</p>
+        <SheetFooter className="border-t border-border pt-4">
+          <div className="w-full space-y-4">
+            <div className="flex items-center justify-between font-semibold">
+              <span>Total</span>
+              <span>${cartTotal.toFixed(2)}</span>
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <Button 
+                onClick={handleOrderComplete} 
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Processing..." : "I've Sent Payment"}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setCheckoutStep('shipping')} 
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                Back to Shipping
+              </Button>
+            </div>
           </div>
-        </div>
+        </SheetFooter>
       </div>
-
-      <SheetFooter className="border-t border-border pt-4">
-        <div className="w-full space-y-4">
-          <div className="flex items-center justify-between font-semibold">
-            <span>Total</span>
-            <span>${cartTotal.toFixed(2)}</span>
-          </div>
-          <div className="flex flex-col gap-2 pt-2">
-            <Button 
-              onClick={handleOrderComplete} 
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Processing..." : "I've Sent Payment"}
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setCheckoutStep('shipping')} 
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              Back to Shipping
-            </Button>
-          </div>
-        </div>
-      </SheetFooter>
-    </div>
-  );
+    );
+  }
 
   return (
     <Sheet open={isCartOpen} onOpenChange={handleCloseCart}>

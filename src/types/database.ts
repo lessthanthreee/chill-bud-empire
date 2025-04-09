@@ -1,4 +1,5 @@
 
+// Database types
 export interface Product {
   id: string;
   name: string;

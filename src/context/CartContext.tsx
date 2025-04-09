@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Product } from '@/types/database';
 
@@ -13,11 +14,14 @@ interface CartContextType {
   subtotal: number;
   cartTotal: number;
   shippingCost: number;
+  cartCount: number;
   addToCart: (product: Product, quantity: number, subscription?: 'none' | 'biweekly' | 'monthly') => void;
   removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, newQuantity: number) => void;
   clearCart: () => void;
   closeCart: () => void;
   openCart: () => void;
+  toggleCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -45,10 +49,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const subtotal = calculateSubtotal();
-
   const shippingCost = subtotal > 75 ? 0 : 6;
-
   const cartTotal = subtotal + shippingCost;
+  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   const addToCart = (product: Product, quantity: number, subscription: 'none' | 'biweekly' | 'monthly' = 'none') => {
     setCart(prevCart => {
@@ -62,6 +65,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return [...prevCart, { product, quantity, subscription }];
       }
     });
+  };
+
+  const updateQuantity = (productId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    setCart(prevCart => 
+      prevCart.map(item => 
+        item.product.id === productId 
+          ? { ...item, quantity: newQuantity } 
+          : item
+      )
+    );
   };
 
   const removeFromCart = (productId: string) => {
@@ -79,6 +97,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const openCart = () => {
     setIsCartOpen(true);
   };
+  
+  const toggleCart = () => {
+    setIsCartOpen(prev => !prev);
+  };
 
   const value: CartContextType = {
     cart,
@@ -86,11 +108,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     subtotal,
     cartTotal,
     shippingCost,
+    cartCount,
     addToCart,
+    updateQuantity,
     removeFromCart,
     clearCart,
     closeCart,
     openCart,
+    toggleCart,
   };
 
   return (

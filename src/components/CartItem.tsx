@@ -31,7 +31,7 @@ const CartItem: React.FC<CartItemProps> = ({ id, name, price, image, quantity })
     <div className="flex items-center py-4 border-b border-border">
       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
         <img
-          src={image}
+          src={image || "/placeholder.svg"}
           alt={name}
           className="h-full w-full object-cover object-center"
         />
