@@ -34,11 +34,61 @@ serve(async (req) => {
     console.log("Received order notification request");
     
     // Parse the request body
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch (error) {
+      console.error("Failed to parse request body:", error);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Failed to parse request body"
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            "Content-Type": "application/json" 
+          },
+          status: 400 
+        }
+      );
+    }
+    
     const { orderData } = body;
     
     if (!orderData) {
-      throw new Error("No order data provided");
+      console.error("No order data provided");
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "No order data provided"
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            "Content-Type": "application/json" 
+          },
+          status: 400 
+        }
+      );
+    }
+    
+    // Validate order data structure
+    if (!orderData.id || !orderData.customerName || !orderData.customerEmail || !orderData.items) {
+      console.error("Invalid order data structure:", orderData);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Invalid order data structure"
+        }),
+        { 
+          headers: { 
+            ...corsHeaders,
+            "Content-Type": "application/json" 
+          },
+          status: 400 
+        }
+      );
     }
     
     console.log("Order received:", JSON.stringify(orderData, null, 2));
@@ -89,14 +139,14 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: error.message 
+        error: error.message || "Unknown error occurred"
       }),
       { 
         headers: { 
           ...corsHeaders,
           "Content-Type": "application/json" 
         },
-        status: 400 
+        status: 500 
       }
     );
   }
