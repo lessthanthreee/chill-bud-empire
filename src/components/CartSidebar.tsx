@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Sheet,
@@ -60,7 +59,7 @@ const cryptoIcons: Record<CryptoOptions, React.ReactNode> = {
           <path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zm-5.5 9.5v13h5.249c6.891 0 8.751-4.375 8.751-6.489c0-2.669-1.67-6.511-8.751-6.511H10.5zm3.5 3h1.501c1.783 0 2.438.208 2.999.917c.561.709.561 1.917.561 2.584c0 1-.561 1.979-.561 2.396c-.561.625-1.216.834-2.999.834H14v-6.731z"/>
         </svg>,
   sol: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-         <path fill="currentColor" d="M23.01 11.42c-.15 0-.31.06-.43.18l-9.51 8.92c-.19.17-.43.26-.69.26H7.09c-.34 0-.66-.18-.84-.47a.996.996 0 010-1.06c.18-.29.5-.47.84-.47h4.46c.26 0 .5-.09.69-.26l9.51-8.92c.24-.22.61-.22.85 0l2.56 2.4c.12.11.18.27.18.43s-.06.31-.18.43l-12.7 11.91c-.19.17-.43.26-.69.26H.96c-.34 0-.66-.18-.84-.47a.996.996 0 010-1.06c.18-.29.5-.47.84-.47h9.72c.26 0 .5-.09.69-.26l12.7-11.91c.12-.11.18-.27.18-.43s-.06-.32-.18-.43l-1.13-1.06c-.12-.12-.28-.18-.43-.18zm-1.93-6.31c.26 0 .5.09.69.26L23.19 6.7c.12.11.18.27.18.43s-.06.31-.18.43l-12.7 11.91c-.19.17-.43.26-.69.26H.77c-.34 0-.66-.18-.84-.47a.996.996 0 010-1.06c.18-.29.5-.47.84-.47h8.22c.26 0 .5-.09.69-.26l12.7-11.91c.12-.11.18-.27.18-.43s-.06-.32-.18-.43l-.74-.7c-.24-.22-.24-.59 0-.81l.99-.93c.19-.17.43-.26.69-.26h7.76c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-6.8c-.26 0-.5.09-.69.26l-.99.93c-.12.11-.18.27-.18.43s.06.32.18.43l.31.29c.12.11.28.17.43.17zm9.66 10.84c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-4.62c-.26 0-.5.09-.69.26l-9.51 8.92c-.24.22-.61.22-.85 0l-2.56-2.4c-.12-.11-.18-.27-.18-.43s.06-.31.18-.43l12.7-11.91c.19-.17.43-.26.69-.26h9.78c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-9.09c-.26 0-.5.09-.69.26l-10.77 10.11c-.12.11-.18.27-.18.43s.06.32.18.43l1.13 1.06c.24.22.61.22.85 0l9.51-8.92c.19-.17.43-.26.69-.26h4.23z"/>
+         <path fill="currentColor" d="M23.01 11.42c-.15 0-.31.06-.43.18l-9.51 8.92c-.19.17-.43.26-.69.26H7.09c-.34 0-.66-.18-.84-.47a.996.996 0 010-1.06c.18-.29.5-.47.84-.47h4.46c.26 0 .5-.09.69-.26l9.51-8.92c.24-.22.61-.22.85 0l2.56 2.4c.12.11.18.27.18.43s-.06.31-.18.43l-12.7 11.91c-.19.17-.43.26-.69.26H.96c-.34 0-.66-.18-.84-.47a.996.996 0 010-1.06c.18-.29.5-.47.84-.47h9.72c.26 0 .5-.09.69-.26l12.7-11.91c.12-.11.18-.27.18-.43s-.06-.32-.18-.43l-.74-.7c-.24-.22-.24-.59 0-.81l.99-.93c.19-.17.43-.26.69-.26h7.76c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-6.8c-.26 0-.5.09-.69.26l-.99.93c-.12.11-.18.27-.18.43s.06.32.18.43l.31.29c.12.11.28.17.43.17zm9.66 10.84c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-4.62c-.26 0-.5.09-.69.26l-9.51 8.92c-.24.22-.61.22-.85 0l-2.56-2.4c-.12-.11-.18-.27-.18-.43s.06-.31.18-.43l12.7-11.91c.19-.17.43-.26.69-.26h9.78c.34 0 .66.18.84.47s.24.66 0 .96c-.18.29-.5.47-.84.47h-9.09c-.26 0-.5.09-.69.26l-10.77 10.11c-.12.11-.18.27-.18.43s.06.32.18.43l1.13 1.06c.24.22.61.22.85 0l9.51-8.92c.19-.17.43-.26.69-.26h4.23z"/>
        </svg>,
   bnb: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
          <path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zM11.2 7L7 11.2l4.2 4.2 4.2-4.2L11.2 7zm9.6 0l-4.2 4.2 4.2 4.2 4.2-4.2L20.8 7zM7 20.8l4.2 4.2 4.2-4.2-4.2-4.2-4.2 4.2zm9.6 0l4.2 4.2 4.2-4.2-4.2-4.2-4.2 4.2zM16 12.418L12.418 16 16 19.582 19.582 16 16 12.418z"/>
@@ -116,6 +115,14 @@ const CartSidebar = () => {
     });
   };
 
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, 
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
+
   const handleOrderComplete = async () => {
     try {
       setIsSubmitting(true);
@@ -164,7 +171,7 @@ const CartSidebar = () => {
       // Add order items - ensure product IDs are valid UUIDs
       const orderItems = cart.map(item => ({
         order_id: orderId,
-        product_id: item.product.id, // This must be a valid UUID from our products data
+        product_id: item.product.id.includes('test-product') ? generateUUID() : item.product.id,
         quantity: item.quantity,
         price: item.product.price,
         subscription: item.subscription || null
@@ -182,42 +189,6 @@ const CartSidebar = () => {
       }
       
       console.log("Order items created successfully");
-      
-      // Send email notification about the new order
-      try {
-        console.log("Sending email notification...");
-        
-        const response = await fetch("https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ 
-            orderData: {
-              id: orderId,
-              customerName: shippingInfo.name,
-              customerEmail: shippingInfo.email,
-              total: cartTotal,
-              items: cart.map(item => ({
-                name: item.product.name,
-                quantity: item.quantity,
-                price: item.product.price
-              }))
-            }
-          }),
-        });
-        
-        if (!response.ok) {
-          console.error("Email notification failed with status:", response.status);
-          // We'll continue with checkout even if email fails
-        } else {
-          const emailResponse = await response.json();
-          console.log("Email notification response:", emailResponse);
-        }
-      } catch (emailError) {
-        console.error("Failed to send email notification:", emailError);
-        // Continue with checkout even if email fails
-      }
       
       toast({
         title: "Order submitted!",

@@ -91,6 +91,7 @@ serve(async (req) => {
       );
     }
     
+    // Log order details for debugging
     console.log("Order received:", JSON.stringify(orderData, null, 2));
     
     // Format the email content with order details
@@ -113,17 +114,18 @@ serve(async (req) => {
       Please process this order as soon as possible.
     `;
     
-    console.log("Email would be sent with the following content:");
-    console.log(emailBody);
+    console.log("Order notification details:", emailBody);
     
-    // Here you would normally send an email notification using a service like Resend
-    // For now, we're just logging the email content
+    // For now, just log the email content instead of sending it
+    // Later we can integrate with an email service like Resend
     
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: "Order notification received and email content generated",
-        emailPreview: emailBody
+        message: "Order notification received and logged successfully",
+        orderId: order.id,
+        customerName: order.customerName,
+        total: order.total.toFixed(2)
       }),
       { 
         headers: { 
