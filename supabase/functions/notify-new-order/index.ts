@@ -8,12 +8,15 @@ import { serve } from "https://deno.land/std@0.188.0/http/server.ts"
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
+// Define more detailed interfaces for better type checking
 interface OrderItem {
   name: string;
   quantity: number;
   price: number;
+  product_id?: string;
 }
 
 interface OrderData {
@@ -22,12 +25,52 @@ interface OrderData {
   customerEmail: string;
   total: number;
   items: OrderItem[];
+  shipping_address?: string;
+  payment_method?: string;
+}
+
+/**
+ * Helper function to create a standardized error response
+ */
+function createErrorResponse(message: string, details: any = null, status = 400) {
+  const errorBody = {
+    success: false,
+    error: message,
+    timestamp: new Date().toISOString(),
+  };
+  
+  if (details) {
+    errorBody.details = details;
+  }
+  
+  return new Response(
+    JSON.stringify(errorBody),
+    { 
+      headers: { 
+        ...corsHeaders,
+        "Content-Type": "application/json" 
+      },
+      status: status 
+    }
+  );
 }
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { 
+      headers: corsHeaders,
+      status: 204
+    });
+  }
+  
+  // Validate request method
+  if (req.method !== 'POST') {
+    return createErrorResponse(
+      "Method not allowed", 
+      { allowedMethods: ['POST'] },
+      405
+    );
   }
 
   try {
@@ -39,18 +82,10 @@ serve(async (req) => {
       body = await req.json();
     } catch (error) {
       console.error("Failed to parse request body:", error);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Failed to parse request body"
-        }),
-        { 
-          headers: { 
-            ...corsHeaders,
-            "Content-Type": "application/json" 
-          },
-          status: 400 
-        }
+      return createErrorResponse(
+        "Failed to parse request body", 
+        { message: error.message },
+        400
       );
     }
     
@@ -58,36 +93,33 @@ serve(async (req) => {
     
     if (!orderData) {
       console.error("No order data provided");
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "No order data provided"
-        }),
-        { 
-          headers: { 
-            ...corsHeaders,
-            "Content-Type": "application/json" 
-          },
-          status: 400 
-        }
+      return createErrorResponse(
+        "No order data provided", 
+        { receivedBody: body },
+        400
       );
     }
     
-    // Validate order data structure
-    if (!orderData.id || !orderData.customerName || !orderData.customerEmail || !orderData.items) {
-      console.error("Invalid order data structure:", orderData);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Invalid order data structure"
-        }),
-        { 
-          headers: { 
-            ...corsHeaders,
-            "Content-Type": "application/json" 
-          },
-          status: 400 
-        }
+    // Validate required fields in order data
+    const requiredFields = ['id', 'customerName', 'customerEmail', 'items', 'total'];
+    const missingFields = requiredFields.filter(field => !orderData[field]);
+    
+    if (missingFields.length > 0) {
+      console.error("Missing required fields in order data:", missingFields);
+      return createErrorResponse(
+        "Invalid order data structure: missing required fields", 
+        { missingFields, receivedData: orderData },
+        400
+      );
+    }
+    
+    // Validate items array
+    if (!Array.isArray(orderData.items) || orderData.items.length === 0) {
+      console.error("Order items must be a non-empty array");
+      return createErrorResponse(
+        "Order items must be a non-empty array", 
+        { receivedItems: orderData.items },
+        400
       );
     }
     
@@ -138,18 +170,21 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error processing order notification:", error);
     
-    return new Response(
-      JSON.stringify({ 
-        success: false,
-        error: error.message || "Unknown error occurred"
-      }),
-      { 
-        headers: { 
-          ...corsHeaders,
-          "Content-Type": "application/json" 
-        },
-        status: 500 
-      }
+    // Create a detailed error response with stack trace in development
+    const errorDetails = {
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Log the full error details for debugging
+    console.error("Full error details:", JSON.stringify(errorDetails, null, 2));
+    
+    // Return a sanitized error response to the client
+    return createErrorResponse(
+      "Error processing order notification", 
+      { message: error.message || "Unknown error occurred" },
+      500
     );
   }
 })

@@ -116,11 +116,26 @@ const CartSidebar = () => {
   };
 
   const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0, 
-            v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+    // Implementation follows RFC4122 version 4 UUID standard
+    const hexDigits = '0123456789abcdef';
+    let uuid = '';
+    
+    // Generate 36 characters: 32 hexadecimal digits and 4 hyphens
+    for (let i = 0; i < 36; i++) {
+      if (i === 8 || i === 13 || i === 18 || i === 23) {
+        uuid += '-';
+      } else if (i === 14) {
+        // Version 4 UUID has the 14th character as '4'
+        uuid += '4';
+      } else if (i === 19) {
+        // The 19th character is either 8, 9, a, or b
+        uuid += hexDigits.charAt(Math.floor(Math.random() * 4) + 8);
+      } else {
+        uuid += hexDigits.charAt(Math.floor(Math.random() * 16));
+      }
+    }
+    
+    return uuid;
   };
 
   const handleOrderComplete = async () => {
@@ -130,6 +145,20 @@ const CartSidebar = () => {
       // Check if cart is empty
       if (cart.length === 0) {
         throw new Error("Your cart is empty");
+      }
+      
+      // Validate shipping information
+      const requiredFields = ['name', 'email', 'address', 'city', 'state', 'zipCode'];
+      const missingFields = requiredFields.filter(field => !shippingInfo[field]);
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Missing required shipping information: ${missingFields.join(', ')}`);
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(shippingInfo.email)) {
+        throw new Error("Please enter a valid email address");
       }
       
       // Create order in database
@@ -149,14 +178,31 @@ const CartSidebar = () => {
       
       console.log("Creating order with payload:", orderPayload);
       
-      const { data, error: orderError } = await supabase
-        .from('orders')
-        .insert(orderPayload)
-        .select();
+      // Try to create the order in the database
+      let orderResponse;
+      try {
+        orderResponse = await supabase
+          .from('orders')
+          .insert(orderPayload)
+          .select();
+      } catch (dbError) {
+        console.error("Database connection error:", dbError);
+        throw new Error("Unable to connect to the order database. Please try again later.");
+      }
+      
+      const { data, error: orderError } = orderResponse;
 
       if (orderError) {
         console.error("Database error creating order:", orderError);
-        throw new Error(`Failed to create order: ${orderError.message}`);
+        
+        // Provide more specific error messages based on error codes
+        if (orderError.code === '23505') {
+          throw new Error("This order appears to be a duplicate. Please check your order history.");
+        } else if (orderError.code === '23503') {
+          throw new Error("Order references invalid data. Please contact customer support.");
+        } else {
+          throw new Error(`Failed to create order: ${orderError.message}`);
+        }
       }
       
       if (!data || data.length === 0) {
@@ -179,9 +225,18 @@ const CartSidebar = () => {
       
       console.log("Creating order items:", orderItems);
       
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
+      // Try to create the order items in the database
+      let itemsResponse;
+      try {
+        itemsResponse = await supabase
+          .from('order_items')
+          .insert(orderItems);
+      } catch (dbError) {
+        console.error("Database connection error for order items:", dbError);
+        throw new Error("Your order was created, but we encountered an issue with the order details. Our team has been notified.");
+      }
+      
+      const { error: itemsError } = itemsResponse;
         
       if (itemsError) {
         console.error("Database error creating order items:", itemsError);
@@ -189,6 +244,42 @@ const CartSidebar = () => {
       }
       
       console.log("Order items created successfully");
+      
+      // Try to send order notification to the edge function
+      try {
+        // Prepare order data for notification
+        const notificationData = {
+          orderData: {
+            id: orderId,
+            customerName: shippingInfo.name,
+            customerEmail: shippingInfo.email,
+            total: cartTotal,
+            items: cart.map(item => ({
+              name: item.product.name,
+              quantity: item.quantity,
+              price: item.product.price,
+              product_id: item.product.id
+            })),
+            shipping_address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`,
+            payment_method: selectedCrypto
+          }
+        };
+        
+        // Send notification to edge function (this is non-blocking)
+        fetch('https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(notificationData)
+        }).catch(notifyError => {
+          // Just log the error, don't throw it since the order is already created
+          console.error("Failed to send order notification:", notifyError);
+        });
+      } catch (notifyError) {
+        // Just log the error, don't throw it since the order is already created
+        console.error("Error preparing order notification:", notifyError);
+      }
       
       toast({
         title: "Order submitted!",
