@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
@@ -13,6 +14,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartSidebar from './components/CartSidebar';
 import CartTest from './tests/CartTest';
+import TestFunctions from './pages/TestFunctions';
 
 const App: React.FC = () => {
   return (
@@ -29,6 +31,7 @@ const App: React.FC = () => {
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/cart-test" element={<CartTest />} />
+            <Route path="/test" element={<TestFunctions />} />
           </Routes>
         </main>
         <Footer />

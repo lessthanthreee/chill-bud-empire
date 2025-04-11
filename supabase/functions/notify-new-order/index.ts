@@ -10,6 +10,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+interface OrderData {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  total: number;
+  items: OrderItem[];
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -21,13 +35,37 @@ serve(async (req) => {
     
     console.log("Order received:", JSON.stringify(orderData, null, 2));
     
+    // Format the email content with order details
+    const order = orderData as OrderData;
+    const itemsList = order.items
+      .map(item => `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`)
+      .join('\n');
+    
+    const emailBody = `
+      New Order Notification
+      
+      Order ID: ${order.id}
+      Customer: ${order.customerName}
+      Email: ${order.customerEmail}
+      Total: $${order.total.toFixed(2)}
+      
+      Items:
+      ${itemsList}
+      
+      Please process this order as soon as possible.
+    `;
+    
+    console.log("Email would be sent with the following content:");
+    console.log(emailBody);
+    
     // Here you would normally send an email notification using a service like Resend
     // If you want to add email functionality, you would need to set up a Resend API key
     
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: "Order notification received" 
+        message: "Order notification received and email content generated",
+        emailPreview: emailBody
       }),
       { 
         headers: { 
@@ -55,9 +93,3 @@ serve(async (req) => {
     );
   }
 })
-
-// To invoke:
-// curl -i --location --request POST 'http://localhost:54321/functions/v1/notify-new-order' \
-//   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-//   --header 'Content-Type: application/json' \
-//   --data '{"orderData":{"customerName":"Test Customer"}}'

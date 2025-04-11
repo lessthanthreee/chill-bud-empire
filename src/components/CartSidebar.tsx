@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Sheet,
@@ -11,7 +12,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/CartContext";
 import CartItem from "./CartItem";
-import { ShoppingCart, Truck, Bitcoin, Clipboard, CheckCircle2 } from "lucide-react";
+import { 
+  ShoppingCart, 
+  Truck, 
+  Clipboard, 
+  CheckCircle2,
+  Bitcoin,
+  DollarSign,
+  PoundSterling,
+  Euro
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +45,27 @@ const cryptoAddresses: Record<CryptoOptions, string> = {
   sol: "5SinF1LcBNgMfZTgaBJJBnxuAgzV5qJ4TfyJDmUfpprD",
   nano: "nano_3rw4un6ys57hrb39sy1qx8qy5wukst1iiponztrz9qiz6qqa55kxzx4491or",
   bnb: "bnb1jxfh2g85q3v0tdq56fnevx6xcxtcnhtsmcu64m"
+};
+
+// Map of crypto options to their respective icons
+const cryptoIcons: Record<CryptoOptions, React.ReactNode> = {
+  btc: <Bitcoin className="h-4 w-4 mr-2" />,
+  eth: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+         <path fill="currentColor" d="M16.498 4v8.87l7.497 3.35z"/>
+         <path fill="currentColor" opacity="0.8" d="M16.498 4L9 16.22l7.498-3.35z"/>
+         <path fill="currentColor" d="M16.498 21.968v6.027L24 17.616z"/>
+         <path fill="currentColor" opacity="0.8" d="M16.498 27.995v-6.028L9 17.616z"/>
+         <path fill="currentColor" d="M16.498 20.573l7.497-4.353-7.497-3.348z"/>
+         <path fill="currentColor" opacity="0.8" d="M9 16.22l7.498 4.353v-7.701z"/>
+       </svg>,
+  doge: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zm-5.5 9v4.5H13v-1.5h1.5v9H13V23h7v-1.5h-4v-9H20V14h2.5V9h-12z"/>
+        </svg>,
+  sol: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+         <path fill="currentColor" d="M20.8 5.7c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1zM20.8 26.3c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1zM20.8 16c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1z"/>
+       </svg>,
+  bnb: <DollarSign className="h-4 w-4 mr-2" />,
+  nano: <Euro className="h-4 w-4 mr-2" />
 };
 
 const CartSidebar = () => {
@@ -131,6 +162,34 @@ const CartSidebar = () => {
         
       if (itemsError) {
         throw new Error(`Failed to add order items: ${itemsError.message}`);
+      }
+      
+      // Send email notification about the new order
+      try {
+        const response = await fetch("https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            orderData: {
+              id: orderId,
+              customerName: shippingInfo.name,
+              customerEmail: shippingInfo.email,
+              total: cartTotal,
+              items: cart.map(item => ({
+                name: item.product.name,
+                quantity: item.quantity,
+                price: item.product.price
+              }))
+            }
+          }),
+        });
+        
+        console.log("Email notification response:", await response.json());
+      } catch (emailError) {
+        console.error("Failed to send email notification:", emailError);
+        // Continue with checkout even if email fails
       }
       
       toast({
@@ -366,42 +425,42 @@ const CartSidebar = () => {
                 className="justify-start"
                 onClick={() => handleSelectCrypto('btc')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> Bitcoin
+                {cryptoIcons.btc} Bitcoin
               </Button>
               <Button 
                 variant={selectedCrypto === 'eth' ? 'default' : 'outline'} 
                 className="justify-start"
                 onClick={() => handleSelectCrypto('eth')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> Ethereum
+                {cryptoIcons.eth} Ethereum
               </Button>
               <Button 
                 variant={selectedCrypto === 'doge' ? 'default' : 'outline'} 
                 className="justify-start"
                 onClick={() => handleSelectCrypto('doge')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> Dogecoin
+                {cryptoIcons.doge} Dogecoin
               </Button>
               <Button 
                 variant={selectedCrypto === 'sol' ? 'default' : 'outline'} 
                 className="justify-start"
                 onClick={() => handleSelectCrypto('sol')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> Solana
+                {cryptoIcons.sol} Solana
               </Button>
               <Button 
                 variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
                 className="justify-start"
                 onClick={() => handleSelectCrypto('bnb')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> BNB
+                {cryptoIcons.bnb} BNB
               </Button>
               <Button 
                 variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
                 className="justify-start"
                 onClick={() => handleSelectCrypto('nano')}
               >
-                <Bitcoin className="h-4 w-4 mr-2" /> Nano
+                {cryptoIcons.nano} Nano
               </Button>
             </div>
           </div>
