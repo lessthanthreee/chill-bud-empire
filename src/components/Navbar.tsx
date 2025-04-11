@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, ShoppingCart, TestTube } from "lucide-react";
+import { Moon, Sun, ShoppingCart } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCart } from "@/context/CartContext";
 
@@ -29,9 +29,6 @@ const Navbar = () => {
           </Link>
           <Link to="/about" className="text-muted-foreground hover:text-foreground">
             About
-          </Link>
-          <Link to="/test" className="text-muted-foreground hover:text-foreground flex items-center">
-            <TestTube className="h-4 w-4 mr-1" /> Test
           </Link>
           
           {/* Cart Button */}

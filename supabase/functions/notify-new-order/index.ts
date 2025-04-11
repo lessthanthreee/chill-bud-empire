@@ -31,7 +31,15 @@ serve(async (req) => {
   }
 
   try {
-    const { orderData } = await req.json();
+    console.log("Received order notification request");
+    
+    // Parse the request body
+    const body = await req.json();
+    const { orderData } = body;
+    
+    if (!orderData) {
+      throw new Error("No order data provided");
+    }
     
     console.log("Order received:", JSON.stringify(orderData, null, 2));
     
@@ -59,7 +67,7 @@ serve(async (req) => {
     console.log(emailBody);
     
     // Here you would normally send an email notification using a service like Resend
-    // If you want to add email functionality, you would need to set up a Resend API key
+    // For now, we're just logging the email content
     
     return new Response(
       JSON.stringify({ 

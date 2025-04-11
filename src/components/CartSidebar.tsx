@@ -18,14 +18,11 @@ import {
   Clipboard, 
   CheckCircle2,
   Bitcoin,
-  DollarSign,
-  PoundSterling,
-  Euro
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Order, OrderItem } from "@/types/database";
+import { Order } from "@/types/database";
 
 type ShippingInfo = {
   name: string;
@@ -58,14 +55,18 @@ const cryptoIcons: Record<CryptoOptions, React.ReactNode> = {
          <path fill="currentColor" d="M16.498 20.573l7.497-4.353-7.497-3.348z"/>
          <path fill="currentColor" opacity="0.8" d="M9 16.22l7.498 4.353v-7.701z"/>
        </svg>,
-  doge: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zm-5.5 9v4.5H13v-1.5h1.5v9H13V23h7v-1.5h-4v-9H20V14h2.5V9h-12z"/>
+  doge: <svg className="h-4 w-4 mr-2" viewBox="0 0 2000 2000" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M1024 659H881.12V281.3h142.9c218.5 0 382.4 85.5 382.4 187.9 0 102.8-163.9 189.8-382.4 189.8zM881.12 794.2h138.9c240 0 431.9 113.8 431.9 256.4 0 141.58-191.9 254.56-431.9 254.56H881.12V794.2zM1024 0C458.3 0 0 457.31 0 1024c0 566.13 458.3 1024 1024 1024 565.67 0 1024-457.87 1024-1024C2048 457.31 1589.67 0 1024 0zm9 1687.8c-428.3 0-769.5-300.82-769.5-651.2 0-299.7 277.1-345 172.1-644.4h317.6v899.4h551.2c169.4 0 305.8-139.5 305.8-310.5s-136.4-313.7-303.8-313.7h-136.5v-59.8h130.6c93.75 0 169.8-76.8 169.8-170.65 0-93.89-76-169.82-169.8-169.82h-539V912c394.7 256.37 446.4-583.1 841.8-76.8-12.98 452.9-137.75 852.6-569.3 852.6z"/>
         </svg>,
-  sol: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-         <path fill="currentColor" d="M20.8 5.7c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1zM20.8 26.3c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1zM20.8 16c-.2-.2-.5-.3-.8-.3H4.9c-.5 0-.9.5-.5 1l3.8 3.9c.2.2.5.3.8.3H25c.5 0 .9-.5.5-1z"/>
+  sol: <svg className="h-4 w-4 mr-2" viewBox="0 0 397.7 311.7" xmlns="http://www.w3.org/2000/svg">
+         <path fill="currentColor" d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7zM64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8zM333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z"/>
        </svg>,
-  bnb: <DollarSign className="h-4 w-4 mr-2" />,
-  nano: <Euro className="h-4 w-4 mr-2" />
+  bnb: <svg className="h-4 w-4 mr-2" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+         <path fill="currentColor" d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zm-1.669 10.384l-4.236 4.236 1.377 1.378 2.859-2.859 2.882 2.882 1.378-1.378-4.26-4.259zm-5.599 5.598l-1.378 1.378 1.378 1.378 1.378-1.378-1.378-1.378zm5.599 1.584l-2.882 2.881-2.859-2.859-1.377 1.378 4.236 4.236 4.26-4.236-1.378-1.4zm4.976-1.584l-1.378 1.378 1.378 1.378 1.378-1.378-1.378-1.378zm0-5.598l-1.378 1.378 1.378 1.378 1.378-1.378-1.378-1.378zm-4.259-4.974l-7.071 7.071 1.378 1.378 5.693-5.692 5.692 5.692 1.378-1.378-7.07-7.07z"/>
+       </svg>,
+  nano: <svg className="h-4 w-4 mr-2" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M63.55 25.33l12.24-12.24 12.3 12.3-12.24 12.24-12.3-12.3zM43.82 45.06l12.24-12.24 12.3 12.3-12.24 12.24-12.3-12.3zM24.1 64.79l12.24-12.24 12.3 12.3-12.24 12.24-12.3-12.3zM7.91 48.6l12.24-12.24 12.3 12.3-12.24 12.24-12.3-12.3zM7.91 27.24l9.53-9.53 9.59 9.59-9.53 9.53-9.59-9.59z"/>
+        </svg>
 };
 
 const CartSidebar = () => {
@@ -118,6 +119,12 @@ const CartSidebar = () => {
     try {
       setIsSubmitting(true);
       
+      // Check if cart is empty
+      if (cart.length === 0) {
+        throw new Error("Your cart is empty");
+      }
+      
+      // Create order in database
       const orderPayload = {
         customer_name: shippingInfo.name,
         customer_email: shippingInfo.email,
@@ -132,12 +139,15 @@ const CartSidebar = () => {
         shipping_status: 'processing'
       };
       
+      console.log("Creating order with payload:", orderPayload);
+      
       const { data, error: orderError } = await supabase
         .from('orders')
         .insert(orderPayload)
         .select();
 
       if (orderError) {
+        console.error("Database error creating order:", orderError);
         throw new Error(`Failed to create order: ${orderError.message}`);
       }
       
@@ -148,24 +158,34 @@ const CartSidebar = () => {
       const createdOrder = data[0] as Order;
       const orderId = createdOrder.id;
       
+      console.log("Order created successfully with ID:", orderId);
+      
+      // Add order items
       const orderItems = cart.map(item => ({
         order_id: orderId,
         product_id: item.product.id,
         quantity: item.quantity,
         price: item.product.price,
-        subscription: item.subscription || undefined
+        subscription: item.subscription || null
       }));
+      
+      console.log("Creating order items:", orderItems);
       
       const { error: itemsError } = await supabase
         .from('order_items')
         .insert(orderItems);
         
       if (itemsError) {
+        console.error("Database error creating order items:", itemsError);
         throw new Error(`Failed to add order items: ${itemsError.message}`);
       }
       
+      console.log("Order items created successfully");
+      
       // Send email notification about the new order
       try {
+        console.log("Sending email notification...");
+        
         const response = await fetch("https://klkncqrjpvvzwyoqmhfe.supabase.co/functions/v1/notify-new-order", {
           method: "POST",
           headers: {
@@ -186,7 +206,13 @@ const CartSidebar = () => {
           }),
         });
         
-        console.log("Email notification response:", await response.json());
+        const emailResponse = await response.json();
+        console.log("Email notification response:", emailResponse);
+        
+        if (!response.ok) {
+          console.error("Email notification failed with status:", response.status);
+          // We'll continue with checkout even if email fails
+        }
       } catch (emailError) {
         console.error("Failed to send email notification:", emailError);
         // Continue with checkout even if email fails
@@ -197,6 +223,7 @@ const CartSidebar = () => {
         description: "Thank you for your order. We'll ship your items soon.",
       });
       
+      // Reset cart and form
       clearCart();
       closeCart();
       setCheckoutStep('cart');
@@ -209,11 +236,11 @@ const CartSidebar = () => {
         zipCode: ''
       });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Order submission error:", error);
       toast({
         title: "Order failed",
-        description: "There was an error processing your order. Please try again.",
+        description: error.message || "There was an error processing your order. Please try again.",
         variant: "destructive"
       });
     } finally {
