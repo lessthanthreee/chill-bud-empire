@@ -215,13 +215,19 @@ const CartSidebar = () => {
       console.log("Order created successfully with ID:", orderId);
       
       // Add order items - ensure product IDs are valid UUIDs
-      const orderItems = cart.map(item => ({
-        order_id: orderId,
-        product_id: item.product.id.includes('test-product') ? generateUUID() : item.product.id,
-        quantity: item.quantity,
-        price: item.product.price,
-        subscription: item.subscription || null
-      }));
+      const orderItems = cart.map(item => {
+        // Check if product ID is a valid UUID
+        const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.product.id);
+        
+        return {
+          order_id: orderId,
+          // Generate a new UUID if the ID is not a valid UUID or contains 'test-product'
+          product_id: isValidUUID ? item.product.id : generateUUID(),
+          quantity: item.quantity,
+          price: item.product.price,
+          subscription: item.subscription || null
+        };
+      });
       
       console.log("Creating order items:", orderItems);
       
