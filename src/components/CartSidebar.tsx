@@ -214,15 +214,36 @@ const CartSidebar = () => {
       
       console.log("Order created successfully with ID:", orderId);
       
-      // Add order items - ensure product IDs are valid UUIDs
+      // First, check if all products exist in the database
+      const productIds = cart.map(item => item.product.id);
+      
+      // Query the database to check which products exist
+      const { data: existingProducts, error: productsError } = await supabase
+        .from('products')
+        .select('id')
+        .in('id', productIds);
+      
+      if (productsError) {
+        console.error("Error checking product existence:", productsError);
+        throw new Error("Failed to verify products. Please try again later.");
+      }
+      
+      // Create a set of existing product IDs for quick lookup
+      const existingProductIds = new Set(existingProducts?.map(p => p.id) || []);
+      
+      // Check if any products don't exist in the database
+      const missingProducts = cart.filter(item => !existingProductIds.has(item.product.id));
+      
+      if (missingProducts.length > 0) {
+        console.error("Missing products:", missingProducts.map(item => item.product.name));
+        throw new Error("Some products in your cart are no longer available. Please refresh your cart and try again.");
+      }
+      
+      // All products exist, create order items
       const orderItems = cart.map(item => {
-        // Check if product ID is a valid UUID
-        const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.product.id);
-        
         return {
           order_id: orderId,
-          // Generate a new UUID if the ID is not a valid UUID or contains 'test-product'
-          product_id: isValidUUID ? item.product.id : generateUUID(),
+          product_id: item.product.id,
           quantity: item.quantity,
           price: item.product.price,
           subscription: item.subscription || null
