@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Clock } from "lucide-react";
 import { 
   Tooltip, 
   TooltipContent, 
@@ -25,6 +25,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Don't add coming soon products to cart
+    if (product.comingSoon) {
+      toast({
+        title: "Product not available",
+        description: "This product is coming soon and not yet available for purchase.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     addToCart(product, 1, "none");
     
     toast({
@@ -33,6 +44,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     });
   };
 
+  const isComingSoon = product.comingSoon || product.inventory === 0;
+
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
       <Link to={`/products/${product.id}`}>
@@ -40,10 +53,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <img
             src={product.image}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            className={`h-full w-full object-cover transition-transform duration-300 hover:scale-105 ${isComingSoon ? 'opacity-70' : ''}`}
           />
           {product.featured && (
             <Badge className="absolute top-2 right-2 bg-primary">Featured</Badge>
+          )}
+          {isComingSoon && (
+            <Badge className="absolute top-2 left-2 bg-amber-500">Coming Soon</Badge>
           )}
         </div>
         <CardContent className="p-4">
@@ -69,17 +85,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant="default"
+                    variant={isComingSoon ? "outline" : "default"}
                     size="sm"
                     className="flex-1"
                     onClick={(e) => handleAddToCart(e)}
+                    disabled={isComingSoon}
                   >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Add to Cart
+                    {isComingSoon ? (
+                      <>
+                        <Clock className="mr-2 h-4 w-4" />
+                        Coming Soon
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                      </>
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Add to cart</p>
+                  <p>{isComingSoon ? "Coming soon" : "Add to cart"}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

@@ -1,10 +1,11 @@
-
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Truck, ShieldCheck, CreditCard } from "lucide-react";
+import { Truck, ShieldCheck, CreditCard, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/database";
+import { products as sampleProducts } from "@/data/products";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -27,42 +28,14 @@ const Products = () => {
         if (data && data.length > 0) {
           setProducts(data as Product[]);
         } else {
-          // Fallback to sample product if no products in database
-          setProducts([{
-            id: '1',
-            name: "Premium Vape Replacement Pod",
-            category: "Vapes",
-            description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-            price: 34.99,
-            image: "/product.png",
-            thc: "N/A",
-            cbd: "N/A",
-            strain: "N/A",
-            effects: ["Smooth Vapor", "Consistent Flavor"],
-            featured: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }]);
+          // Fallback to sample products if no products in database
+          setProducts(sampleProducts);
         }
       } catch (err) {
         console.error("Error fetching products:", err);
         setError("Failed to load products. Please try again later.");
-        // Use sample product as fallback
-        setProducts([{
-          id: '1',
-          name: "Premium Vape Replacement Pod",
-          category: "Vapes",
-          description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-          price: 34.99,
-          image: "/product.png",
-          thc: "N/A",
-          cbd: "N/A", 
-          strain: "N/A",
-          effects: ["Smooth Vapor", "Consistent Flavor"],
-          featured: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }]);
+        // Use sample products as fallback
+        setProducts(sampleProducts);
       } finally {
         setIsLoading(false);
       }
@@ -108,7 +81,9 @@ const Products = () => {
   }
 
   // Main product display
-  const featuredProduct = products[0] || null;
+  const featuredProduct = products.find(p => p.featured) || products[0] || null;
+  const availableProducts = products.filter(p => !p.comingSoon);
+  const comingSoonProducts = products.filter(p => p.comingSoon);
 
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
@@ -120,7 +95,7 @@ const Products = () => {
         </p>
       </div>
 
-      {/* Product Display */}
+      {/* Featured Product Display */}
       {featuredProduct && (
         <div className="mb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -168,6 +143,29 @@ const Products = () => {
               
               <ProductCard product={featuredProduct} />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Coming Soon Products */}
+      {comingSoonProducts.length > 0 && (
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Coming Soon</h2>
+          </div>
+          
+          <Alert className="mb-6">
+            <AlertCircle className="h-4 w-4 mr-2" />
+            <AlertTitle>We're expanding our product line!</AlertTitle>
+            <AlertDescription>
+              These products are currently in production and will be available soon. Stay tuned for updates!
+            </AlertDescription>
+          </Alert>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {comingSoonProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       )}

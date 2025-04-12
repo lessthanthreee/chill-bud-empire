@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ChevronDown, Check, Truck, ShieldCheck, CreditCard } from "lucide-react";
+import { Star, ChevronDown, Check, Truck, ShieldCheck, CreditCard, Clock, AlertCircle } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/types/database';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { products as sampleProducts } from '@/data/products';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -25,49 +26,38 @@ const ProductDetail = () => {
       
       try {
         setIsLoading(true);
+        
+        // First try to fetch from Supabase
         const { data, error } = await supabase
           .from('products')
           .select('*')
           .eq('id', id)
           .single();
           
-        if (error) throw error;
-        
-        if (data) {
+        if (error) {
+          console.log("Supabase error, trying local data:", error);
+          // If Supabase fails, try to find in sample products
+          const localProduct = sampleProducts.find(p => p.id === id);
+          
+          if (localProduct) {
+            setProduct(localProduct);
+          } else {
+            // If not found in sample products either, use a default
+            throw new Error("Product not found");
+          }
+        } else if (data) {
           setProduct(data as Product);
-        } else {
-          // Use sample product data if none found
-          setProduct({
-            id: id,
-            name: "Premium Vape Replacement Pod",
-            description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-            price: 19.99,
-            image: "/product.png",
-            category: "Vapes",
-            thc: "N/A",
-            cbd: "N/A",
-            strain: "N/A",
-            effects: ["Smooth Vapor", "Consistent Flavor"],
-            featured: true
-          } as Product);
         }
       } catch (err) {
         console.error("Error fetching product:", err);
         setError("Failed to load product details. Please try again later.");
-        // Fallback to sample data
-        setProduct({
-          id: id,
-          name: "Premium Vape Replacement Pod",
-          description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-          price: 19.99,
-          image: "/product.png",
-          category: "Vapes",
-          thc: "N/A",
-          cbd: "N/A",
-          strain: "N/A",
-          effects: ["Smooth Vapor", "Consistent Flavor"],
-          featured: true
-        } as Product);
+        
+        // Try one more time with sample products
+        const fallbackProduct = sampleProducts.find(p => p.id === id);
+        if (fallbackProduct) {
+          setProduct(fallbackProduct);
+          setError(null);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -84,6 +74,15 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
+      if (product.comingSoon || product.inventory === 0) {
+        toast({
+          title: "Product not available",
+          description: "This product is coming soon and not yet available for purchase.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
       addToCart(product, quantity, subscription);
       toast({
         title: "Added to cart",
@@ -133,6 +132,8 @@ const ProductDetail = () => {
     );
   }
 
+  const isComingSoon = product.comingSoon || product.inventory === 0;
+
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -140,8 +141,14 @@ const ProductDetail = () => {
           <img
             src={product.image || "/placeholder.svg"}
             alt={product.name}
-            className="w-full h-auto object-cover aspect-square"
+            className={`w-full h-auto object-cover aspect-square ${isComingSoon ? 'opacity-70' : ''}`}
           />
+          
+          {isComingSoon && (
+            <div className="absolute top-4 left-4">
+              <Badge className="bg-amber-500">Coming Soon</Badge>
+            </div>
+          )}
         </div>
         
         <div className="space-y-6">
@@ -162,6 +169,16 @@ const ProductDetail = () => {
           
           <p className="text-muted-foreground">{product.description}</p>
           
+          {isComingSoon && (
+            <Alert variant="warning" className="bg-amber-50 text-amber-800 border-amber-300">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              <AlertDescription>
+                This product is coming soon and not yet available for purchase. 
+                Check back later for updates on availability.
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Quantity</label>
@@ -171,7 +188,7 @@ const ProductDetail = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => handleQuantityChange(quantity - 1)}
-                  disabled={quantity <= 1}
+                  disabled={quantity <= 1 || isComingSoon}
                 >
                   -
                 </Button>
@@ -181,6 +198,7 @@ const ProductDetail = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => handleQuantityChange(quantity + 1)}
+                  disabled={isComingSoon}
                 >
                   +
                 </Button>
@@ -195,6 +213,7 @@ const ProductDetail = () => {
                   variant="outline"
                   className="w-full justify-between"
                   onClick={toggleOptions}
+                  disabled={isComingSoon}
                 >
                   <span>
                     {subscription === 'none' ? 'One-time purchase' : 
@@ -242,8 +261,17 @@ const ProductDetail = () => {
             onClick={handleAddToCart} 
             size="lg" 
             className="w-full"
+            disabled={isComingSoon}
+            variant={isComingSoon ? "outline" : "default"}
           >
-            Add to Cart
+            {isComingSoon ? (
+              <>
+                <Clock className="mr-2 h-5 w-5" />
+                Coming Soon
+              </>
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
           
           <div className="bg-secondary/50 rounded-lg p-4 space-y-3">
