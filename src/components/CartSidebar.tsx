@@ -178,19 +178,10 @@ const CartSidebar = () => {
       
       console.log("Creating order with payload:", orderPayload);
       
-      // Try to create the order in the database
-      let orderResponse;
-      try {
-        orderResponse = await supabase
-          .from('orders')
-          .insert(orderPayload)
-          .select();
-      } catch (dbError) {
-        console.error("Database connection error:", dbError);
-        throw new Error("Unable to connect to the order database. Please try again later.");
-      }
-      
-      const { data, error: orderError } = orderResponse;
+      const { data, error: orderError } = await supabase
+        .from('orders')
+        .insert(orderPayload)
+        .select();
 
       if (orderError) {
         console.error("Database error creating order:", orderError);
@@ -208,38 +199,26 @@ const CartSidebar = () => {
       if (!data || data.length === 0) {
         throw new Error("Order was created but no data was returned");
       }
-      
+
       const createdOrder = data[0] as Order;
       const orderId = createdOrder.id;
       
       console.log("Order created successfully with ID:", orderId);
       
-      // Skip product verification (since we know we're using a single product)
-      // and create order items directly
-      const orderItems = cart.map(item => {
-        return {
-          order_id: orderId,
-          product_id: "123e4567-e89b-12d3-a456-426614174000", // Use the same UUID as in products.ts
-          quantity: item.quantity,
-          price: item.product.price,
-          subscription: item.subscription || null
-        };
-      });
+      // Directly create order items with hardcoded product ID
+      const orderItems = cart.map(item => ({
+        order_id: orderId,
+        product_id: null,  // Since we only have one product, we can set this to null
+        quantity: item.quantity,
+        price: item.product.price,
+        subscription: item.subscription || null
+      }));
       
       console.log("Creating order items:", orderItems);
       
-      // Try to create the order items in the database
-      let itemsResponse;
-      try {
-        itemsResponse = await supabase
-          .from('order_items')
-          .insert(orderItems);
-      } catch (dbError) {
-        console.error("Database connection error for order items:", dbError);
-        throw new Error("Your order was created, but we encountered an issue with the order details. Our team has been notified.");
-      }
-      
-      const { error: itemsError } = itemsResponse;
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
         
       if (itemsError) {
         console.error("Database error creating order items:", itemsError);
@@ -542,118 +521,4 @@ const CartSidebar = () => {
                 {cryptoIcons.sol} Solana
               </Button>
               <Button 
-                variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('bnb')}
-              >
-                {cryptoIcons.bnb} BNB
-              </Button>
-              <Button 
-                variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('nano')}
-              >
-                {cryptoIcons.nano} Nano
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="font-medium">Send Payment To:</h3>
-            <div className="flex flex-col space-y-2">
-              <div className="p-3 bg-secondary rounded-md break-all text-xs font-mono">
-                {cryptoAddresses[selectedCrypto]}
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center"
-                onClick={handleCopyAddress}
-              >
-                {copiedAddress ? 
-                  <><CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Copied!</> : 
-                  <><Clipboard className="h-4 w-4 mr-2" /> Copy Address</>
-                }
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              Please send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
-              Once payment is complete, click "I've Sent Payment" below.
-            </p>
-          </div>
-
-          <div className="bg-secondary/50 p-4 rounded-lg">
-            <h3 className="font-medium mb-2">Shipping Information</h3>
-            <div className="text-sm space-y-1">
-              <p><span className="font-medium">Name:</span> {shippingInfo.name}</p>
-              <p><span className="font-medium">Email:</span> {shippingInfo.email}</p>
-              <p><span className="font-medium">Address:</span> {shippingInfo.address}</p>
-              <p><span className="font-medium">City:</span> {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}</p>
-            </div>
-          </div>
-        </div>
-
-        <SheetFooter className="border-t border-border pt-4">
-          <div className="w-full space-y-4">
-            <div className="flex items-center justify-between font-semibold">
-              <span>Total</span>
-              <span>${cartTotal.toFixed(2)}</span>
-            </div>
-            <div className="flex flex-col gap-2 pt-2">
-              <Button 
-                onClick={handleOrderComplete} 
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Processing..." : "I've Sent Payment"}
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setCheckoutStep('shipping')} 
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                Back to Shipping
-              </Button>
-            </div>
-          </div>
-        </SheetFooter>
-      </div>
-    );
-  }
-
-  return (
-    <Sheet open={isCartOpen} onOpenChange={handleCloseCart}>
-      <SheetContent className="w-full sm:max-w-md flex flex-col" side="left">
-        <SheetHeader>
-          <SheetTitle className="flex items-center">
-            {checkoutStep === 'cart' && (
-              <>
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Your Cart
-              </>
-            )}
-            {checkoutStep === 'shipping' && (
-              <>
-                <Truck className="mr-2 h-5 w-5" />
-                Shipping Information
-              </>
-            )}
-            {checkoutStep === 'payment' && (
-              <>
-                {cryptoIcons[selectedCrypto]}
-                Payment
-              </>
-            )}
-          </SheetTitle>
-        </SheetHeader>
-
-        {checkoutStep === 'cart' && renderCartStep()}
-        {checkoutStep === 'shipping' && renderShippingStep()}
-        {checkoutStep === 'payment' && renderPaymentStep()}
-      </SheetContent>
-    </Sheet>
-  );
-};
-
-export default CartSidebar;
+                variant={selectedCrypto === 'bnb' ? 'default' : '
