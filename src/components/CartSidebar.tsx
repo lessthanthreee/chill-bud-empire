@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Sheet,
@@ -521,4 +522,94 @@ const CartSidebar = () => {
                 {cryptoIcons.sol} Solana
               </Button>
               <Button 
-                variant={selectedCrypto === 'bnb' ? 'default' : '
+                variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('bnb')}
+              >
+                {cryptoIcons.bnb} BNB
+              </Button>
+              <Button 
+                variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
+                className="justify-start"
+                onClick={() => handleSelectCrypto('nano')}
+              >
+                {cryptoIcons.nano} Nano
+              </Button>
+            </div>
+          </div>
+
+          <div className="bg-muted p-4 rounded-md">
+            <div className="flex justify-between mb-2">
+              <span className="text-sm font-medium">Amount due:</span>
+              <span className="text-sm font-bold">${cartTotal.toFixed(2)}</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Send to address:</span>
+                {copiedAddress ? (
+                  <span className="text-xs text-green-500 flex items-center">
+                    <CheckCircle2 className="h-3 w-3 mr-1" /> Copied
+                  </span>
+                ) : null}
+              </div>
+              <div 
+                className="relative bg-background border border-border rounded-md p-2 text-xs font-mono break-all cursor-pointer"
+                onClick={handleCopyAddress}
+              >
+                {cryptoAddresses[selectedCrypto]}
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-6 text-xs"
+                  onClick={handleCopyAddress}
+                >
+                  <Clipboard className="h-3 w-3 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-sm">After you've sent the payment:</p>
+            <Button 
+              className="w-full"
+              onClick={handleOrderComplete}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Processing..." : "Complete Order"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCheckoutStep('shipping')}
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              Back to Shipping
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Sheet open={isCartOpen} onOpenChange={closeCart}>
+      <SheetContent className="flex flex-col w-full sm:max-w-md">
+        <SheetHeader className="border-b border-border pb-4">
+          <SheetTitle>Your Cart</SheetTitle>
+        </SheetHeader>
+        
+        {checkoutStep === 'cart' && renderCartStep()}
+        {checkoutStep === 'shipping' && renderShippingStep()}
+        {checkoutStep === 'payment' && renderPaymentStep()}
+      </SheetContent>
+    </Sheet>
+  );
+};
+
+export default CartSidebar;
