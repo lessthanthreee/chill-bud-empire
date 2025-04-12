@@ -148,9 +148,6 @@ serve(async (req) => {
     
     console.log("Order notification details:", emailBody);
     
-    // For now, just log the email content instead of sending it
-    // Later we can integrate with an email service like Resend
-    
     return new Response(
       JSON.stringify({ 
         success: true,

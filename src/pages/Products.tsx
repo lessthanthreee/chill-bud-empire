@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ const Products = () => {
             name: "Premium Vape Replacement Pod",
             category: "Vapes",
             description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-            price: 19.99,
+            price: 34.99,
             image: "/product.png",
             thc: "N/A",
             cbd: "N/A",
@@ -52,7 +53,7 @@ const Products = () => {
           name: "Premium Vape Replacement Pod",
           category: "Vapes",
           description: "High-quality replacement pod compatible with most popular vape devices. Made with premium materials for a consistent vaping experience.",
-          price: 19.99,
+          price: 34.99,
           image: "/product.png",
           thc: "N/A",
           cbd: "N/A", 
@@ -165,13 +166,7 @@ const Products = () => {
                 </div>
               </div>
               
-              <Button 
-                size="lg" 
-                className="w-full md:w-auto"
-                asChild
-              >
-                <a href="#buy-now">Buy Now</a>
-              </Button>
+              <ProductCard product={featuredProduct} />
             </div>
           </div>
         </div>
@@ -232,48 +227,6 @@ const Products = () => {
                 <span>Easy installation and replacement</span>
               </li>
             </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Buy Now Section */}
-      <div id="buy-now" className="mb-16 pt-8">
-        <h2 className="text-2xl font-bold mb-6">Buy Now</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="border rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold mb-2">Single Pod</h3>
-            <p className="text-3xl font-bold mb-4">${featuredProduct?.price.toFixed(2)}</p>
-            <ul className="text-sm text-muted-foreground space-y-2 mb-6">
-              <li>1 replacement pod</li>
-              <li>$6 shipping</li>
-            </ul>
-            {featuredProduct && <ProductCard product={featuredProduct} />}
-          </div>
-          
-          <div className="border border-primary rounded-lg p-6 text-center bg-primary/5 relative">
-            <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-3 py-1 text-xs font-medium rounded-bl-lg rounded-tr-lg">
-              POPULAR
-            </div>
-            <h3 className="text-xl font-bold mb-2">Pack of 3</h3>
-            <p className="text-3xl font-bold mb-4">${featuredProduct ? (featuredProduct.price * 2.75).toFixed(2) : '0.00'}</p>
-            <ul className="text-sm text-muted-foreground space-y-2 mb-6">
-              <li>3 replacement pods</li>
-              <li>$6 shipping</li>
-              <li className="text-primary font-medium">Save 8%</li>
-            </ul>
-            {featuredProduct && <ProductCard product={featuredProduct} />}
-          </div>
-          
-          <div className="border rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold mb-2">Pack of 5</h3>
-            <p className="text-3xl font-bold mb-4">${featuredProduct ? (featuredProduct.price * 4.5).toFixed(2) : '0.00'}</p>
-            <ul className="text-sm text-muted-foreground space-y-2 mb-6">
-              <li>5 replacement pods</li>
-              <li>Free shipping</li>
-              <li className="text-primary font-medium">Save 10%</li>
-            </ul>
-            {featuredProduct && <ProductCard product={featuredProduct} />}
           </div>
         </div>
       </div>
