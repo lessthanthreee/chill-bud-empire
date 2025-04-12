@@ -1,9 +1,8 @@
 
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
 import { serve } from "https://deno.land/std@0.188.0/http/server.ts"
+import { Resend } from "npm:resend@2.0.0"
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"))
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,32 +28,6 @@ interface OrderData {
   payment_method?: string;
 }
 
-/**
- * Helper function to create a standardized error response
- */
-function createErrorResponse(message: string, details: any = null, status = 400) {
-  const errorBody = {
-    success: false,
-    error: message,
-    timestamp: new Date().toISOString(),
-  };
-  
-  if (details) {
-    errorBody.details = details;
-  }
-  
-  return new Response(
-    JSON.stringify(errorBody),
-    { 
-      headers: { 
-        ...corsHeaders,
-        "Content-Type": "application/json" 
-      },
-      status: status 
-    }
-  );
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -66,10 +39,15 @@ serve(async (req) => {
   
   // Validate request method
   if (req.method !== 'POST') {
-    return createErrorResponse(
-      "Method not allowed", 
-      { allowedMethods: ['POST'] },
-      405
+    return new Response(
+      JSON.stringify({ error: "Method not allowed" }),
+      { 
+        headers: { 
+          ...corsHeaders,
+          "Content-Type": "application/json" 
+        },
+        status: 405 
+      }
     );
   }
 
@@ -77,84 +55,65 @@ serve(async (req) => {
     console.log("Received order notification request");
     
     // Parse the request body
-    let body;
-    try {
-      body = await req.json();
-    } catch (error) {
-      console.error("Failed to parse request body:", error);
-      return createErrorResponse(
-        "Failed to parse request body", 
-        { message: error.message },
-        400
-      );
-    }
-    
-    const { orderData } = body;
+    const { orderData } = await req.json();
     
     if (!orderData) {
-      console.error("No order data provided");
-      return createErrorResponse(
-        "No order data provided", 
-        { receivedBody: body },
-        400
-      );
+      throw new Error("No order data provided");
     }
-    
-    // Validate required fields in order data
-    const requiredFields = ['id', 'customerName', 'customerEmail', 'items', 'total'];
-    const missingFields = requiredFields.filter(field => !orderData[field]);
-    
-    if (missingFields.length > 0) {
-      console.error("Missing required fields in order data:", missingFields);
-      return createErrorResponse(
-        "Invalid order data structure: missing required fields", 
-        { missingFields, receivedData: orderData },
-        400
-      );
-    }
-    
-    // Validate items array
-    if (!Array.isArray(orderData.items) || orderData.items.length === 0) {
-      console.error("Order items must be a non-empty array");
-      return createErrorResponse(
-        "Order items must be a non-empty array", 
-        { receivedItems: orderData.items },
-        400
-      );
-    }
-    
-    // Log order details for debugging
-    console.log("Order received:", JSON.stringify(orderData, null, 2));
-    
-    // Format the email content with order details
-    const order = orderData as OrderData;
-    const itemsList = order.items
+
+    // Format the order items for email
+    const itemsList = orderData.items
       .map(item => `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`)
-      .join('\n');
-    
-    const emailBody = `
-      New Order Notification
-      
-      Order ID: ${order.id}
-      Customer: ${order.customerName}
-      Email: ${order.customerEmail}
-      Total: $${order.total.toFixed(2)}
-      
-      Items:
-      ${itemsList}
-      
-      Please process this order as soon as possible.
-    `;
-    
-    console.log("Order notification details:", emailBody);
-    
+      .join('<br>');
+
+    // Send email to admin/store owner
+    const { error: emailError } = await resend.emails.send({
+      from: 'orders@clevelandcartridge.com',
+      to: 'admin@clevelandcartridge.com', // Replace with your actual admin email
+      subject: `New Order #${orderData.id}`,
+      html: `
+        <h1>New Order Received</h1>
+        <p><strong>Order ID:</strong> ${orderData.id}</p>
+        <p><strong>Customer:</strong> ${orderData.customerName}</p>
+        <p><strong>Email:</strong> ${orderData.customerEmail}</p>
+        <p><strong>Total:</strong> $${orderData.total.toFixed(2)}</p>
+        <p><strong>Payment Method:</strong> ${orderData.payment_method?.toUpperCase()}</p>
+        <p><strong>Shipping Address:</strong> ${orderData.shipping_address}</p>
+        <h2>Order Items:</h2>
+        <p>${itemsList}</p>
+      `
+    });
+
+    if (emailError) {
+      console.error("Email sending error:", emailError);
+      // Still continue with the response even if email fails
+    }
+
+    // Send a confirmation email to the customer
+    const { error: customerEmailError } = await resend.emails.send({
+      from: 'orders@clevelandcartridge.com',
+      to: orderData.customerEmail,
+      subject: `Order Confirmation #${orderData.id}`,
+      html: `
+        <h1>Thank you for your order!</h1>
+        <p>Order #${orderData.id} has been received and is being processed.</p>
+        <h2>Order Details:</h2>
+        <p><strong>Total:</strong> $${orderData.total.toFixed(2)}</p>
+        <h3>Items:</h3>
+        <p>${itemsList}</p>
+        <p>We'll send you another email once your order has been shipped.</p>
+      `
+    });
+
+    if (customerEmailError) {
+      console.error("Customer email sending error:", customerEmailError);
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: "Order notification received and logged successfully",
-        orderId: order.id,
-        customerName: order.customerName,
-        total: order.total.toFixed(2)
+        message: "Order notification sent successfully",
+        orderId: orderData.id
       }),
       { 
         headers: { 
@@ -167,21 +126,20 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error processing order notification:", error);
     
-    // Create a detailed error response with stack trace in development
-    const errorDetails = {
-      message: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString()
-    };
-    
-    // Log the full error details for debugging
-    console.error("Full error details:", JSON.stringify(errorDetails, null, 2));
-    
-    // Return a sanitized error response to the client
-    return createErrorResponse(
-      "Error processing order notification", 
-      { message: error.message || "Unknown error occurred" },
-      500
+    return new Response(
+      JSON.stringify({ 
+        success: false,
+        message: "Error processing order notification",
+        error: error.message
+      }),
+      { 
+        headers: { 
+          ...corsHeaders,
+          "Content-Type": "application/json" 
+        },
+        status: 500 
+      }
     );
   }
 })
+
