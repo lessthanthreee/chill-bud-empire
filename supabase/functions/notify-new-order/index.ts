@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     
     console.log('Attempting to send customer email to:', orderData.customerEmail)
     const customerEmailResult = await resend.emails.send({
-      from: 'order@clevelandcartridge.co',
+      from: 'Cleveland Cartridge Co. <onboarding@resend.dev>',
       to: orderData.customerEmail,
       subject: `Cleveland Cartridge Co. - Order Confirmation #${orderData.id.substring(0, 8)}`,
       html: customerHtml,
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     
     console.log('Attempting to send admin email to: support@clevelandcartridge.co')
     const adminEmailResult = await resend.emails.send({
-      from: 'order@clevelandcartridge.co',
+      from: 'Cleveland Cartridge Co. <onboarding@resend.dev>',
       to: 'support@clevelandcartridge.co',
       subject: `New Order Received #${orderData.id.substring(0, 8)}`,
       html: adminHtml,
