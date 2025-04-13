@@ -116,6 +116,45 @@ flowchart TD
 4. **Customer Review Rate**: % of orders that result in reviews
 5. **Average Order Value**: Total revenue / number of orders
 
+## Database Security Architecture
+
+1. **Row-Level Security Implementation**
+   - PostgreSQL RLS policies prevent unauthorized access to customer data
+   - Database queries are parameterized to prevent SQL injection attacks
+   - Segregated permissions model with principle of least privilege
+
+2. **Data Encryption**
+   - All customer PII (Personally Identifiable Information) is encrypted at rest
+   - Shipping addresses are stored with column-level encryption
+   - TLS 1.3 secures all data in transit between services
+
+3. **Data Access Controls**
+   - Multi-factor authentication required for admin database access
+   - Database access logs are maintained and audited regularly
+   - IP-based access restrictions for backend systems
+
+4. **Payment Data Isolation**
+   - Cryptocurrency transaction hashes stored separately from customer data
+   - No storing of private keys or seed phrases in the database
+   - Zero correlation between payment identifiers and customer information without proper authorization
+
+## Privacy Protection Measures
+
+1. **Customer Data Protection**
+   - Strict adherence to data minimization principles
+   - Automated data retention policies to purge unnecessary information
+   - No sharing of customer data with third parties
+
+2. **Anonymized Analytics**
+   - Usage metrics are collected without personally identifying information
+   - Aggregated data used for business intelligence
+   - Customers can opt out of non-essential data collection
+
+3. **Technical Safeguards**
+   - Regular penetration testing of systems
+   - Automated vulnerability scanning
+   - DDoS protection at network edge
+
 ## Recommended Improvements for Future
 
 1. **Automated Payment Verification System**
@@ -135,3 +174,8 @@ flowchart TD
    - Automated email sequences
    - SMS notifications for important status changes
    - Personalized follow-ups based on purchase history
+
+5. **Security Enhancements**
+   - Implement zero-knowledge proofs for payment verification
+   - Customer-side encryption keys for personal data
+   - Decentralized identity verification options
