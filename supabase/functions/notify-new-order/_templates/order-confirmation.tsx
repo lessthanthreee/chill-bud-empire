@@ -70,6 +70,24 @@ const OrderConfirmationEmail: React.FC<OrderConfirmationEmailProps> = ({
             </Section>
           )}
           
+          <Section style={styles.paymentInstructions}>
+            <Text style={styles.sectionTitle}>Payment Instructions</Text>
+            <Text style={styles.detail}>
+              Please send your cryptocurrency payment to one of the following addresses:
+            </Text>
+            <Text style={styles.paymentAddress}>Bitcoin (BTC): bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</Text>
+            <Text style={styles.paymentAddress}>Ethereum (ETH): 0x71C7656EC7ab88b098defB751B7401B5f6d8976F</Text>
+            <Text style={styles.paymentAddress}>Litecoin (LTC): ltc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</Text>
+            
+            <Text style={styles.importantDetail}>
+              <strong>IMPORTANT:</strong> When sending payment, please include your order number <strong>#{orderId}</strong> in the transaction memo/description.
+            </Text>
+            
+            <Text style={styles.detail}>
+              Once we verify your payment, your order will be processed and shipped.
+            </Text>
+          </Section>
+          
           {orderData.shipping_address && (
             <Section style={styles.section}>
               <Text style={styles.sectionTitle}>Shipping Information</Text>
@@ -83,7 +101,7 @@ const OrderConfirmationEmail: React.FC<OrderConfirmationEmailProps> = ({
           <Hr style={styles.hr} />
           
           <Text style={styles.text}>
-            If you have any questions about your order, please contact our customer service team.
+            If you have any questions about your order or payment process, please contact our customer service team at support@clevelandcartridge.co.
           </Text>
           
           <Text style={styles.footer}>
@@ -127,6 +145,13 @@ const styles = {
     backgroundColor: '#f9f9f9',
     borderRadius: '4px',
   },
+  paymentInstructions: {
+    margin: '24px 0',
+    padding: '16px',
+    backgroundColor: '#f0f7ff',
+    borderRadius: '4px',
+    border: '1px solid #d0e3ff',
+  },
   sectionTitle: {
     fontSize: '18px',
     fontWeight: 'bold',
@@ -137,6 +162,25 @@ const styles = {
     fontSize: '14px',
     color: '#555',
     margin: '6px 0',
+  },
+  importantDetail: {
+    fontSize: '14px',
+    color: '#333',
+    margin: '12px 0',
+    padding: '8px',
+    backgroundColor: '#fffde7',
+    borderRadius: '4px',
+    border: '1px solid #ffe57f',
+  },
+  paymentAddress: {
+    fontSize: '14px',
+    color: '#333',
+    margin: '6px 0',
+    padding: '8px',
+    backgroundColor: '#f5f5f5',
+    borderRadius: '4px',
+    fontFamily: 'monospace',
+    wordBreak: 'break-all' as const,
   },
   hr: {
     borderColor: '#e6e6e6',
