@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Product } from '@/types/database';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/components/ui/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { products as sampleProducts } from '@/data/products';
 
 const ProductDetail = () => {
@@ -170,7 +172,7 @@ const ProductDetail = () => {
           <p className="text-muted-foreground">{product.description}</p>
           
           {isComingSoon && (
-            <Alert variant="warning" className="bg-amber-50 text-amber-800 border-amber-300">
+            <Alert>
               <AlertCircle className="h-4 w-4 mr-2" />
               <AlertDescription>
                 This product is coming soon and not yet available for purchase. 
