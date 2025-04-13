@@ -13,6 +13,7 @@ export interface Product {
   cbd?: string;
   strain?: string;
   effects?: string[];
+  comingSoon?: boolean;
   created_at?: string;
   updated_at?: string;
 }

@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
       })
     )
     
+    console.log('Attempting to send customer email to:', orderData.customerEmail)
     const customerEmailResult = await resend.emails.send({
       from: 'order@clevelandcartridge.co',
       to: orderData.customerEmail,
@@ -56,6 +57,7 @@ Deno.serve(async (req) => {
       React.createElement(AdminNotificationEmail, { orderData })
     )
     
+    console.log('Attempting to send admin email to: support@clevelandcartridge.co')
     const adminEmailResult = await resend.emails.send({
       from: 'order@clevelandcartridge.co',
       to: 'support@clevelandcartridge.co',
@@ -78,7 +80,8 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Order notifications sent successfully' 
+        message: 'Order notifications sent successfully',
+        orderId: orderData.id 
       }),
       {
         headers: {
