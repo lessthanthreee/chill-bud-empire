@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Instagram, MessageCircle, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";

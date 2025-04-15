@@ -1,204 +1,45 @@
 
-import React from "react";
-import { Helmet } from "react-helmet";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Download, FileText, Info } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import React from 'react';
 
 const LabResults = () => {
-  const labReports = [
-    {
-      id: "batch-001",
-      name: "Batch #125 - April 2025",
-      date: "April 15, 2025",
-      type: "Full Panel Analysis",
-      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
-      pdfUrl: "#"
-    },
-    {
-      id: "batch-002",
-      name: "Batch #124 - March 2025",
-      date: "March 22, 2025",
-      type: "Full Panel Analysis",
-      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
-      pdfUrl: "#"
-    },
-    {
-      id: "batch-003",
-      name: "Batch #123 - February 2025",
-      date: "February 18, 2025",
-      type: "Full Panel Analysis",
-      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
-      pdfUrl: "#"
-    }
-  ];
+  return (
+    <div className="container mx-auto px-4 py-8 pt-24">
+      <h1 className="text-4xl font-bold mb-8">Lab Results</h1>
+      <div className="prose max-w-none">
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Third-Party Testing</h2>
+          <p>All Cleveland Cartridge Co. products undergo rigorous third-party laboratory testing to ensure quality, potency, and safety. Our lab results are regularly updated to provide you with the most current information.</p>
+        </section>
 
-  const SampleLabReport = ({ report }) => (
-    <div className="p-4">
-      <h3 className="text-xl font-bold mb-4">Laboratory Analysis Report</h3>
-      <div className="mb-4">
-        <p><strong>Sample ID:</strong> CCC-2025-{Math.floor(Math.random() * 1000)}</p>
-        <p><strong>Product Name:</strong> Premium Delta-8 THC Vape Pod</p>
-        <p><strong>Batch Number:</strong> {report.name.split('-')[1].trim()}</p>
-        <p><strong>Test Date:</strong> {report.date}</p>
-        <p><strong>Laboratory:</strong> Cleveland Analytics</p>
-      </div>
-      
-      <div className="mb-4">
-        <h4 className="font-bold">Cannabinoid Profile</h4>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-muted">
-              <th className="p-2 text-left">Cannabinoid</th>
-              <th className="p-2 text-right">Result (%)</th>
-              <th className="p-2 text-right">Result (mg/g)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-t border-border">
-              <td className="p-2">Delta-8 THC</td>
-              <td className="p-2 text-right">91.2%</td>
-              <td className="p-2 text-right">912.0</td>
-            </tr>
-            <tr className="border-t border-border">
-              <td className="p-2">CBD</td>
-              <td className="p-2 text-right">0.5%</td>
-              <td className="p-2 text-right">5.0</td>
-            </tr>
-            <tr className="border-t border-border">
-              <td className="p-2">CBG</td>
-              <td className="p-2 text-right">0.3%</td>
-              <td className="p-2 text-right">3.0</td>
-            </tr>
-            <tr className="border-t border-border">
-              <td className="p-2">CBN</td>
-              <td className="p-2 text-right">0.2%</td>
-              <td className="p-2 text-right">2.0</td>
-            </tr>
-            <tr className="border-t border-border">
-              <td className="p-2">Delta-9 THC</td>
-              <td className="p-2 text-right">&lt; 0.3%</td>
-              <td className="p-2 text-right">&lt; 3.0</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <div className="mb-4">
-        <h4 className="font-bold">Microbiological Testing</h4>
-        <p className="text-green-600 font-semibold">PASS</p>
-        <p className="text-sm">All microbiological tests are within acceptable limits.</p>
-      </div>
-      
-      <div className="mb-4">
-        <h4 className="font-bold">Residual Solvents</h4>
-        <p className="text-green-600 font-semibold">PASS</p>
-        <p className="text-sm">All residual solvents are within acceptable limits.</p>
-      </div>
-      
-      <div className="mb-4">
-        <h4 className="font-bold">Heavy Metals</h4>
-        <p className="text-green-600 font-semibold">PASS</p>
-        <p className="text-sm">All heavy metals are within acceptable limits.</p>
-      </div>
-      
-      <div className="mb-4">
-        <h4 className="font-bold">Pesticides</h4>
-        <p className="text-green-600 font-semibold">PASS</p>
-        <p className="text-sm">All pesticide tests are within acceptable limits.</p>
-      </div>
-      
-      <div className="mt-8 text-sm text-muted-foreground">
-        <p>This report is for informational purposes only.</p>
-        <p>Contact Cleveland Cartridge Co. for complete lab results at info@clevelandcartridge.co.</p>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Latest Test Results</h2>
+          <div className="bg-secondary p-6 rounded-lg">
+            <p className="text-lg mb-4">Current Batch: CC2024-001</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Delta-8 THC Content: 94.2%</li>
+              <li>Delta-9 THC Content: &lt;0.3%</li>
+              <li>No heavy metals detected</li>
+              <li>No residual solvents detected</li>
+              <li>Testing Date: April 2024</li>
+            </ul>
+            <p className="mt-4 text-sm">Full lab report available upon request.</p>
+          </div>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Testing Standards</h2>
+          <p>Our products are tested for:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Cannabinoid profile</li>
+            <li>Terpene profile</li>
+            <li>Pesticides</li>
+            <li>Heavy metals</li>
+            <li>Residual solvents</li>
+            <li>Microbiological contaminants</li>
+          </ul>
+        </section>
       </div>
     </div>
-  );
-
-  return (
-    <>
-      <Helmet>
-        <title>Lab Results | Cleveland Cartridge Co.</title>
-      </Helmet>
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8">Lab Results</h1>
-        
-        <div className="mb-8">
-          <p className="text-lg mb-4">
-            At Cleveland Cartridge Co., quality and safety are our top priorities. We ensure all our products undergo rigorous third-party laboratory testing to verify purity, potency, and safety.
-          </p>
-          <p className="text-lg mb-4">
-            Our testing protocol includes screening for:
-          </p>
-          <ul className="list-disc pl-8 mb-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-            <li>Potency Analysis</li>
-            <li>Residual Solvents</li>
-            <li>Pesticides</li>
-            <li>Heavy Metals</li>
-            <li>Microbial Impurities</li>
-            <li>Foreign Materials</li>
-          </ul>
-          <div className="bg-muted p-4 rounded-lg mb-8">
-            <div className="flex items-start gap-3">
-              <Info className="h-5 w-5 text-primary mt-0.5" />
-              <div>
-                <h3 className="font-semibold">Important Delta-8 THC Information</h3>
-                <p className="text-sm mt-1">
-                  Our products contain delta-8 THC derived from hemp and comply with the 2018 Farm Bill, containing less than 0.3% delta-9 THC. 
-                  All our products undergo comprehensive testing to ensure they meet safety standards and legal requirements.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {labReports.map((report) => (
-            <Card key={report.id}>
-              <CardHeader>
-                <CardTitle>{report.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <p className="text-sm text-muted-foreground mb-1">Test Date: {report.date}</p>
-                  <p className="text-sm text-muted-foreground mb-3">Type: {report.type}</p>
-                  <p className="text-sm mb-4">{report.description}</p>
-                </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full gap-2">
-                      <FileText className="h-4 w-4" />
-                      <span>View Report</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                      <DialogTitle>{report.name} - Lab Report</DialogTitle>
-                    </DialogHeader>
-                    <SampleLabReport report={report} />
-                  </DialogContent>
-                </Dialog>
-                <Button variant="secondary" className="w-full mt-2 gap-2">
-                  <Download className="h-4 w-4" />
-                  <span>Download PDF</span>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        <div className="mt-12 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Understanding Lab Reports</h2>
-          <p className="mb-4">
-            Our lab reports provide detailed information about the composition and safety of our products. If you have any questions about interpreting these reports, please don't hesitate to contact us.
-          </p>
-          <p>
-            For more information or to request specific test results, please email us at <a href="mailto:info@clevelandcartridge.co" className="text-primary underline">info@clevelandcartridge.co</a>.
-          </p>
-        </div>
-      </div>
-    </>
   );
 };
 
