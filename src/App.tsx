@@ -10,6 +10,11 @@ import About from './pages/About';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Reviews from './pages/Reviews';
+import Contact from './pages/Contact';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Shipping from './pages/Shipping';
+import LabResults from './pages/LabResults';
 import AgeVerification from './components/AgeVerification';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -30,6 +35,11 @@ const App: React.FC = () => {
               <Route path="/products" element={<Products />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/reviews" element={<Reviews />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/shipping" element={<Shipping />} />
+              <Route path="/lab-results" element={<LabResults />} />
             </Routes>
           </main>
           <Footer />

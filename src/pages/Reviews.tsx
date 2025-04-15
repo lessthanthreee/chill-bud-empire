@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Review, ReviewWithUI } from "@/types/database";
@@ -16,8 +17,44 @@ const Reviews = () => {
   const [email, setEmail] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [productId, setProductId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableProducts, setAvailableProducts] = useState<{id: string, name: string}[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState("");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select("id, name")
+          .order("name");
+          
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setAvailableProducts(data);
+          setSelectedProductId(data[0].id);
+        } else {
+          // Fallback for demo purposes
+          setAvailableProducts([{
+            id: "00000000-0000-0000-0000-000000000000",
+            name: "Premium Vape Replacement Pod"
+          }]);
+          setSelectedProductId("00000000-0000-0000-0000-000000000000");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        // Set a fallback for demo
+        setAvailableProducts([{
+          id: "00000000-0000-0000-0000-000000000000",
+          name: "Premium Vape Replacement Pod"
+        }]);
+        setSelectedProductId("00000000-0000-0000-0000-000000000000");
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -51,7 +88,7 @@ const Reviews = () => {
         setReviews([
           {
             id: "1",
-            product_id: "1",
+            product_id: "00000000-0000-0000-0000-000000000000",
             name: "John Smith",
             email: "john@example.com",
             rating: 5,
@@ -80,7 +117,7 @@ const Reviews = () => {
     try {
       const { error } = await supabase.from("reviews").insert([
         {
-          product_id: productId || "1",
+          product_id: selectedProductId,
           name,
           email,
           rating,
@@ -100,7 +137,6 @@ const Reviews = () => {
       setEmail("");
       setRating(5);
       setComment("");
-      setProductId("");
     } catch (error) {
       console.error("Error submitting review:", error);
       toast({
@@ -239,21 +275,41 @@ const Reviews = () => {
                   <Label htmlFor="name">Your Name</Label>
                   <Input
                     id="name"
-                    required
+                    name="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
-                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
+                {availableProducts.length > 0 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="product">Product</Label>
+                    <select
+                      id="product"
+                      className="w-full p-2 border rounded-md bg-background"
+                      value={selectedProductId}
+                      onChange={(e) => setSelectedProductId(e.target.value)}
+                      required
+                    >
+                      {availableProducts.map(product => (
+                        <option key={product.id} value={product.id}>
+                          {product.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="rating">Rating</Label>
                   <div className="flex gap-1">
@@ -277,6 +333,7 @@ const Reviews = () => {
                   <Label htmlFor="comment">Your Review</Label>
                   <Textarea
                     id="comment"
+                    name="comment"
                     required
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
