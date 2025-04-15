@@ -17,7 +17,10 @@ const Footer = () => {
               <span className="font-bold text-lg">Cleveland Cartridge Co.</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              Premium vape replacement pods from Cleveland. Quality, performance, and satisfaction guaranteed.
+              The DoorDash for Delta-8 in Cleveland. Premium Delta-8 THC products delivered to your door with speed and discretion.
+            </p>
+            <p className="text-muted-foreground text-sm">
+              We also ship to most states where Delta-8 is legal!
             </p>
           </div>
 

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -88,10 +89,11 @@ const Products = () => {
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Premium Vape Replacement Pods</h1>
+        <h1 className="text-3xl font-bold mb-4">Premium Delta-8 THC Products</h1>
         <p className="text-muted-foreground max-w-3xl">
-          Cleveland Cartridge Co. offers the highest quality replacement pods for your vaping needs. 
-          Each pod is manufactured with premium materials to ensure the best possible vaping experience.
+          Cleveland's #1 Delta-8 delivery service. We're like DoorDash, but for Delta-8! 
+          Get same-day delivery in Cleveland or nationwide shipping to states where Delta-8 is legal.
+          Each product is lab-tested for purity and potency.
         </p>
       </div>
 
@@ -119,30 +121,45 @@ const Products = () => {
                 <div className="flex items-start">
                   <Truck className="h-5 w-5 text-primary mr-3 mt-0.5" />
                   <div>
-                    <h4 className="font-medium">Fast Shipping</h4>
-                    <p className="text-sm text-muted-foreground">Free shipping on orders over $75, otherwise $6 flat rate</p>
+                    <h4 className="font-medium">Same-Day Delivery in Cleveland</h4>
+                    <p className="text-sm text-muted-foreground">Free shipping on orders over $75 nationwide to legal states</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
                   <ShieldCheck className="h-5 w-5 text-primary mr-3 mt-0.5" />
                   <div>
-                    <h4 className="font-medium">Premium Quality</h4>
-                    <p className="text-sm text-muted-foreground">Superior materials and construction for the best experience</p>
+                    <h4 className="font-medium">Lab Tested Quality</h4>
+                    <p className="text-sm text-muted-foreground">All products third-party tested for purity and potency</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
                   <CreditCard className="h-5 w-5 text-primary mr-3 mt-0.5" />
                   <div>
-                    <h4 className="font-medium">Secure Payment</h4>
-                    <p className="text-sm text-muted-foreground">Multiple cryptocurrency payment options available</p>
+                    <h4 className="font-medium">Secure Crypto Payment</h4>
+                    <p className="text-sm text-muted-foreground">Multiple cryptocurrency options for private transactions</p>
                   </div>
                 </div>
               </div>
               
               <ProductCard product={featuredProduct} />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Available Products */}
+      {availableProducts.length > 0 && (
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Available Now</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {availableProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       )}
@@ -158,7 +175,7 @@ const Products = () => {
             <AlertCircle className="h-4 w-4 mr-2" />
             <AlertTitle>We're expanding our product line!</AlertTitle>
             <AlertDescription>
-              These products are currently in production and will be available soon. Stay tuned for updates!
+              These products are currently in production and will be available soon. Sign up for our newsletter to get notified when they drop!
             </AlertDescription>
           </Alert>
           
@@ -172,57 +189,43 @@ const Products = () => {
 
       {/* Product Details */}
       <div className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Product Details</h2>
+        <h2 className="text-2xl font-bold mb-6">Delta-8 THC Information</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-xl font-medium mb-4">Specifications</h3>
-            <ul className="space-y-3">
-              <li className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Material</span>
-                <span className="font-medium">Premium Grade</span>
-              </li>
-              <li className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Capacity</span>
-                <span className="font-medium">2ml</span>
-              </li>
-              <li className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Resistance</span>
-                <span className="font-medium">1.2 ohm</span>
-              </li>
-              <li className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Compatibility</span>
-                <span className="font-medium">Universal</span>
-              </li>
-              <li className="flex justify-between border-b pb-2">
-                <span className="text-muted-foreground">Weight</span>
-                <span className="font-medium">8g</span>
-              </li>
-            </ul>
+            <h3 className="text-xl font-medium mb-4">What is Delta-8 THC?</h3>
+            <p className="mb-4">
+              Delta-8 THC is a naturally occurring cannabinoid found in small amounts in the cannabis plant. 
+              It offers a milder, more clear-headed experience compared to traditional Delta-9 THC.
+            </p>
+            <p>
+              Our Delta-8 products are derived from legal hemp and comply with the 2018 Farm Bill. Each batch is 
+              lab-tested to ensure purity and legal compliance.
+            </p>
           </div>
           
           <div>
-            <h3 className="text-xl font-medium mb-4">Features</h3>
+            <h3 className="text-xl font-medium mb-4">Benefits & Effects</h3>
             <ul className="space-y-2">
               <li className="flex items-start">
                 <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 mt-0.5">•</div>
-                <span>Leak-resistant design</span>
+                <span>Mild euphoria and relaxation</span>
               </li>
               <li className="flex items-start">
                 <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 mt-0.5">•</div>
-                <span>Consistent vapor production</span>
+                <span>Clear-headed experience</span>
               </li>
               <li className="flex items-start">
                 <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 mt-0.5">•</div>
-                <span>Enhanced flavor delivery</span>
+                <span>Lower anxiety potential than Delta-9</span>
               </li>
               <li className="flex items-start">
                 <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 mt-0.5">•</div>
-                <span>Extended coil life</span>
+                <span>Legal in many states where Delta-9 THC is not</span>
               </li>
               <li className="flex items-start">
                 <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 mt-0.5">•</div>
-                <span>Easy installation and replacement</span>
+                <span>Available for delivery across Cleveland and shipping to legal states</span>
               </li>
             </ul>
           </div>
