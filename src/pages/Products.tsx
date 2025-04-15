@@ -53,14 +53,8 @@ const Products = () => {
           <div className="animate-pulse">
             <div className="h-8 bg-secondary rounded w-1/3 mx-auto mb-4"></div>
             <div className="h-4 bg-secondary rounded w-1/2 mx-auto mb-12"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               <div className="h-96 bg-secondary rounded"></div>
-              <div className="space-y-4">
-                <div className="h-6 bg-secondary rounded w-1/4"></div>
-                <div className="h-4 bg-secondary rounded w-full"></div>
-                <div className="h-4 bg-secondary rounded w-full"></div>
-                <div className="h-10 bg-secondary rounded w-1/3"></div>
-              </div>
             </div>
           </div>
         </div>
@@ -81,9 +75,8 @@ const Products = () => {
     );
   }
 
-  // Main product display
-  const featuredProduct = products.find(p => p.featured) || products[0] || null;
-  const availableProducts = products.filter(p => !p.comingSoon);
+  // Get available and coming soon products
+  const availableProduct = products.find(p => !p.comingSoon) || products[0] || null;
   const comingSoonProducts = products.filter(p => p.comingSoon);
 
   return (
@@ -97,24 +90,24 @@ const Products = () => {
         </p>
       </div>
 
-      {/* Featured Product Display */}
-      {featuredProduct && (
+      {/* Main Product Display */}
+      {availableProduct && (
         <div className="mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="rounded-lg overflow-hidden border border-border">
+          <div className="grid grid-cols-1 gap-8 items-center">
+            <div className="rounded-lg overflow-hidden border border-border max-w-md mx-auto">
               <img
-                src={featuredProduct.image}
-                alt={featuredProduct.name}
+                src={availableProduct.image}
+                alt={availableProduct.name}
                 className="w-full h-auto object-cover aspect-square"
               />
             </div>
             
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold">{featuredProduct.name}</h2>
-              <p className="text-muted-foreground">{featuredProduct.description}</p>
+              <h2 className="text-2xl font-bold">{availableProduct.name}</h2>
+              <p className="text-muted-foreground">{availableProduct.description}</p>
               
               <div className="text-2xl font-semibold">
-                ${featuredProduct.price.toFixed(2)}
+                ${availableProduct.price.toFixed(2)}
               </div>
               
               <div className="bg-secondary/50 rounded-lg p-4 space-y-3">
@@ -122,7 +115,7 @@ const Products = () => {
                   <Truck className="h-5 w-5 text-primary mr-3 mt-0.5" />
                   <div>
                     <h4 className="font-medium">Same-Day Delivery in Cleveland</h4>
-                    <p className="text-sm text-muted-foreground">Free shipping on orders over $75 nationwide to legal states</p>
+                    <p className="text-sm text-muted-foreground">Free shipping on orders over $75 nationwide to states where Delta-8 is legal</p>
                   </div>
                 </div>
                 
@@ -143,23 +136,8 @@ const Products = () => {
                 </div>
               </div>
               
-              <ProductCard product={featuredProduct} />
+              <ProductCard product={availableProduct} />
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Available Products */}
-      {availableProducts.length > 0 && (
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Available Now</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {availableProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
           </div>
         </div>
       )}
@@ -175,11 +153,11 @@ const Products = () => {
             <AlertCircle className="h-4 w-4 mr-2" />
             <AlertTitle>We're expanding our product line!</AlertTitle>
             <AlertDescription>
-              These products are currently in production and will be available soon. Sign up for our newsletter to get notified when they drop!
+              This product is currently in production and will be available soon. Sign up for our newsletter to get notified when it drops!
             </AlertDescription>
           </Alert>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="max-w-md mx-auto">
             {comingSoonProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}

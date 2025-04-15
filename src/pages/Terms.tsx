@@ -8,22 +8,22 @@ const Terms = () => {
       <Helmet>
         <title>Terms & Conditions | Cleveland Cartridge Co.</title>
       </Helmet>
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 pt-24">
         <div className="max-w-3xl mx-auto bg-card p-8 rounded-lg shadow-sm">
           <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
           
           <div className="prose prose-stone max-w-none">
             <p className="text-muted-foreground mb-4">
-              Last Updated: April 1, 2025
+              Last Updated: April 15, 2025
             </p>
             
             <p className="lead mb-6">
-              Welcome to Cleveland Cartridge Co. These Terms and Conditions govern your use of our website located at clevelandcartridge.com (the "Site") and the products and services offered through our Site. Please read these terms carefully before using our services.
+              Welcome to Cleveland Cartridge Co. These Terms and Conditions govern your use of our website located at clevelandcartridge.co (the "Site") and the products and services offered through our Site. Please read these terms carefully before using our services.
             </p>
             
             <h2 className="text-2xl font-semibold mt-8 mb-4">1. Agreement to Terms</h2>
             <p>
-              By accessing or using our website, you agree to be bound by these Terms and Conditions and all applicable laws and regulations. If you disagree with any part of the terms, you may not access the website or use our services. These Terms constitute a legally binding agreement between you and Cleveland Cartridge Co., established and operating since March 25, 2025.
+              By accessing or using our website, you agree to be bound by these Terms and Conditions and all applicable laws and regulations. If you disagree with any part of the terms, you may not access the website or use our services. These Terms constitute a legally binding agreement between you and Cleveland Cartridge Co., established and operating since March 25, 2022.
             </p>
             
             <h2 className="text-2xl font-semibold mt-8 mb-4">2. Age Restriction</h2>
@@ -66,7 +66,21 @@ const Terms = () => {
               We reserve the right to reject returns that do not meet our return criteria. Customized or personalized products cannot be returned unless they are defective.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">7. Intellectual Property</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">7. Data Protection and Security</h2>
+            <p>
+              At Cleveland Cartridge Co., we take customer data security extremely seriously. We implement industry-standard security measures to protect your personal information, including advanced encryption for all sensitive data.
+            </p>
+            <p className="mt-2">
+              All customer shipping addresses and personal information are stored using secure encryption protocols. Our database implements robust security measures to prevent unauthorized access, including SQL injection protection, parameterized queries, and regular security audits.
+            </p>
+            <p className="mt-2">
+              We never share, sell, or distribute your personal information to third parties except as necessary to fulfill your orders (such as providing delivery information to shipping partners). All of our staff members undergo security training and sign confidentiality agreements.
+            </p>
+            <p className="mt-2">
+              For cryptocurrency payments, we use secure payment processors and never store your crypto wallet addresses or transaction details beyond what is necessary for order processing.
+            </p>
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">8. Intellectual Property</h2>
             <p>
               The content on this website, including but not limited to text, graphics, logos, images, audio clips, digital downloads, data compilations, and software, is the property of Cleveland Cartridge Co. or its content suppliers and is protected by United States and international copyright and trademark laws.
             </p>
@@ -74,12 +88,12 @@ const Terms = () => {
               Our trademarks and trade dress may not be used in connection with any product or service that is not ours, in any manner that is likely to cause confusion among customers, or in any manner that disparages or discredits us.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">8. Limitation of Liability</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">9. Limitation of Liability</h2>
             <p>
               Cleveland Cartridge Co., our directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers, or licensors shall not be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind, including, without limitation lost profits, lost revenue, lost savings, loss of data, replacement costs, or any similar damages, whether based in contract, tort (including negligence), strict liability or otherwise, arising from your use of any of the services or products procured using the service, or for any other claim related in any way to your use of the service or any product.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">9. Health Disclaimer</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">10. Health Disclaimer</h2>
             <p>
               Our products have not been evaluated by the Food and Drug Administration (FDA) and are not intended to diagnose, treat, cure, or prevent any disease or health condition. The effects of delta-8 THC vary from person to person, and we make no guarantees regarding specific effects or experiences.
             </p>
@@ -87,29 +101,9 @@ const Terms = () => {
               Consult with a physician before use if you have a serious medical condition or use prescription medications. A doctor's advice should be sought before using this and any supplemental dietary product.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">10. Indemnification</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">11. Contact Information</h2>
             <p>
-              You agree to indemnify, defend and hold harmless Cleveland Cartridge Co. and our parent, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, interns and employees, from any claim or demand, including reasonable attorneys' fees, made by any third-party due to or arising out of your breach of these Terms of Service or the documents they incorporate by reference, or your violation of any law or the rights of a third-party.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">11. Severability</h2>
-            <p>
-              In the event that any provision of these Terms of Service is determined to be unlawful, void or unenforceable, such provision shall nonetheless be enforceable to the fullest extent permitted by applicable law, and the unenforceable portion shall be deemed to be severed from these Terms of Service, such determination shall not affect the validity and enforceability of any other remaining provisions.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">12. Governing Law</h2>
-            <p>
-              These Terms shall be governed by and construed in accordance with the laws of the state of Ohio, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts located within Cleveland, Ohio.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">13. Changes to Terms</h2>
-            <p>
-              We reserve the right to update, change or replace any part of these Terms of Service by posting updates and/or changes to our website. It is your responsibility to check our website periodically for changes. Your continued use of or access to the website following the posting of any changes to these Terms of Service constitutes acceptance of those changes.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">14. Contact Information</h2>
-            <p>
-              Questions about the Terms of Service should be sent to us at contact@clevelandcartridge.com.
+              Questions about the Terms of Service should be sent to us at contact@clevelandcartridge.co.
             </p>
           </div>
         </div>

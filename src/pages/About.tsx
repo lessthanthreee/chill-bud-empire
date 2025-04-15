@@ -10,9 +10,9 @@ const About = () => {
     <div className="container mx-auto px-4 py-8 pt-24">
       {/* Hero Section */}
       <div className="mb-16 text-center">
-        <h1 className="text-4xl font-bold mb-6">About Chill Bud Empire</h1>
+        <h1 className="text-4xl font-bold mb-6">About Cleveland Cartridge Co.</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Your trusted source for premium Delta 8 THC products in Ohio.
+          Your trusted source for premium Delta 8 THC products. The DoorDash for Delta-8!
         </p>
       </div>
 
@@ -21,15 +21,15 @@ const About = () => {
         <div className="space-y-6">
           <h2 className="text-3xl font-bold">Our Story</h2>
           <p className="text-muted-foreground">
-            Chill Bud Empire was founded in 2022 with a simple mission: to provide high-quality, 
-            lab-tested Delta 8 THC products to the Ohio community. As lifelong advocates for the 
+            Cleveland Cartridge Co. was founded in 2023 with a simple mission: to provide high-quality, 
+            lab-tested Delta 8 THC products to Cleveland and beyond. As lifelong advocates for the 
             benefits of cannabinoids, we saw the potential for Delta 8 to offer relaxation, relief, 
             and enjoyment in a legal, accessible way.
           </p>
           <p className="text-muted-foreground">
-            What started as a small operation has grown into one of Ohio's most trusted sources 
-            for premium Delta 8 products. Our commitment to quality, transparency, and customer 
-            education has earned us a loyal following throughout the state.
+            What started as a delivery service in Cleveland has grown into a trusted source 
+            for premium Delta 8 products shipping to states where Delta-8 is legal. Our commitment to quality, transparency, and customer 
+            education has earned us a loyal following throughout the country.
           </p>
           <p className="text-muted-foreground">
             We pride ourselves on working directly with trusted manufacturers who adhere to strict 
@@ -40,7 +40,7 @@ const About = () => {
         </div>
         <div className="rounded-lg overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1605001891523-a9eddafc0555?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" 
+            src="https://images.unsplash.com/photo-1536819114556-1e10f967fb61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" 
             alt="Cannabis farm" 
             className="w-full h-full object-cover"
           />
@@ -94,76 +94,82 @@ const About = () => {
               </div>
               <h3 className="text-xl font-medium mb-2">Community</h3>
               <p className="text-muted-foreground">
-                We're proud to be an Ohio-based business supporting our local community and economy.
+                We're proud to be a Cleveland-based business supporting our local community and economy.
               </p>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* Compliance Section */}
+      {/* Compliance Section - Expanded */}
       <div className="bg-secondary/50 rounded-xl p-8 my-16">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">Legal Compliance</h2>
-          <p className="text-muted-foreground mb-6">
-            All of our products comply with the 2018 Farm Bill and contain less than 0.3% Delta-9 THC, 
-            making them federally legal. We also adhere to all Ohio state regulations regarding the sale 
-            and distribution of hemp-derived products.
-          </p>
-          <p className="text-muted-foreground mb-6">
-            We take our responsibility seriously and require age verification for all purchases. 
-            Customers must be 21 years or older to purchase our products, in accordance with Ohio state law.
-          </p>
-          <div className="flex items-center">
-            <div className="h-1.5 w-1.5 bg-primary rounded-full mr-2"></div>
-            <p className="text-sm text-muted-foreground">
-              The statements on this website have not been evaluated by the Food and Drug Administration. 
-              These products are not intended to diagnose, treat, cure, or prevent any disease.
+          
+          <div className="space-y-4 max-h-80 overflow-y-auto pr-4">
+            <p className="text-muted-foreground">
+              All of our products comply with the 2018 Farm Bill and contain less than 0.3% Delta-9 THC, 
+              making them federally legal. We also adhere to all relevant state regulations regarding the sale 
+              and distribution of hemp-derived products.
             </p>
+            
+            <p className="text-muted-foreground">
+              We take our responsibility seriously and require age verification for all purchases. 
+              Customers must be 21 years or older to purchase our products, in accordance with our policies.
+            </p>
+            
+            <p className="text-muted-foreground">
+              <strong>DISCLAIMER:</strong> The legality of Delta-8 THC varies by state. Consumers are responsible for knowing their local laws before purchasing. Cleveland Cartridge Co. makes no guarantees about the legal status of our products in your jurisdiction.
+            </p>
+            
+            <p className="text-muted-foreground">
+              <strong>CONSUMER NOTICE:</strong> Delta-8 THC products may cause impairment and may produce psychoactive effects similar to those of Delta-9 THC. Do not drive or operate heavy machinery while using Delta-8 THC products. Keep out of reach of children and pets.
+            </p>
+            
+            <p className="text-muted-foreground">
+              <strong>MANUFACTURING COMPLIANCE:</strong> Our manufacturing partners follow Good Manufacturing Practices (GMP) and our products undergo rigorous third-party laboratory testing for potency, purity, and contaminants. Certificates of Analysis (COAs) are available upon request for all products.
+            </p>
+            
+            <p className="text-muted-foreground">
+              <strong>DATA PROTECTION:</strong> We utilize industry-standard encryption and security protocols to protect customer data. Personal information, including shipping addresses, is encrypted and stored securely. We never share, sell, or otherwise distribute customer information to third parties except as required for shipping and payment processing.
+            </p>
+            
+            <p className="text-muted-foreground">
+              <strong>LEGAL JURISDICTION:</strong> Any disputes arising from the use or purchase of our products shall be governed by and construed in accordance with the laws of the State of Ohio, without regard to its conflict of law provisions.
+            </p>
+            
+            <div className="flex items-center mt-6">
+              <div className="h-1.5 w-1.5 bg-primary rounded-full mr-2"></div>
+              <p className="text-sm text-muted-foreground">
+                The statements on this website have not been evaluated by the Food and Drug Administration. 
+                These products are not intended to diagnose, treat, cure, or prevent any disease.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Team Section (Optional) */}
+      {/* Team Section - Modified */}
       <div className="my-16">
-        <h2 className="text-3xl font-bold text-center mb-4">Our Team</h2>
+        <h2 className="text-3xl font-bold text-center mb-4">Meet the Founders</h2>
         <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-          Meet the passionate individuals behind Chill Bud Empire who are dedicated to bringing 
-          you the finest Delta 8 products in Ohio.
+          The visionaries behind Cleveland Cartridge Co. who are dedicated to bringing 
+          you the finest Delta-8 products from Cleveland to the nation.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
           <div className="text-center">
-            <div className="rounded-full overflow-hidden w-32 h-32 mx-auto mb-4">
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
+            <div className="rounded-full overflow-hidden w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
+              <span className="text-4xl font-bold text-primary">JD</span>
             </div>
-            <h3 className="text-xl font-medium">Alex Thompson</h3>
-            <p className="text-muted-foreground">Founder & CEO</p>
+            <h3 className="text-xl font-medium">Jason Dunn</h3>
+            <p className="text-muted-foreground">Founder & Product Specialist</p>
           </div>
           <div className="text-center">
-            <div className="rounded-full overflow-hidden w-32 h-32 mx-auto mb-4">
-              <img 
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
+            <div className="rounded-full overflow-hidden w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
+              <span className="text-4xl font-bold text-primary">MR</span>
             </div>
-            <h3 className="text-xl font-medium">Jordan Rivera</h3>
-            <p className="text-muted-foreground">Product Specialist</p>
-          </div>
-          <div className="text-center">
-            <div className="rounded-full overflow-hidden w-32 h-32 mx-auto mb-4">
-              <img 
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <h3 className="text-xl font-medium">Morgan Lee</h3>
-            <p className="text-muted-foreground">Customer Relations</p>
+            <h3 className="text-xl font-medium">Mike Reynolds</h3>
+            <p className="text-muted-foreground">Technical Operations</p>
           </div>
         </div>
       </div>

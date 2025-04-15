@@ -1,112 +1,117 @@
 
-import { Resend } from 'npm:resend@3.2.0'
-import { corsHeaders } from '../_shared/cors.ts'
-import { SupabaseClient, createClient } from 'npm:@supabase/supabase-js@2.39.7'
-import OrderConfirmationEmail from './_templates/order-confirmation.tsx'
-import AdminNotificationEmail from './_templates/admin-notification.tsx'
-import React from 'npm:react@18.3.1'
-import { renderAsync } from 'npm:@react-email/components@0.0.12'
+// Import necessary modules
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
 
-// Get Resend API key from environment
-const resendApiKey = Deno.env.get('RESEND_API_KEY')
-const supabaseUrl = Deno.env.get('SUPABASE_URL')
-const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
+// Initialize Resend with the API key
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-// Create a Resend client
-const resend = new Resend(resendApiKey)
+// Set CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
-Deno.serve(async (req) => {
-  // Handle CORS for browser requests
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+interface OrderDetails {
+  orderId: string;
+  customerEmail: string;
+  customerName: string;
+  orderTotal: number;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+}
+
+serve(async (req: Request) => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders,
+    });
   }
-  
+
   try {
-    // Parse request body
-    const { orderData } = await req.json()
-    console.log('Received order data:', JSON.stringify(orderData, null, 2))
-    
-    // Validate required data
-    if (!orderData || !orderData.id || !orderData.customerEmail) {
-      throw new Error('Missing required order data')
-    }
-    
-    // Create a Supabase client
-    const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string)
-    
-    // Send customer confirmation email
-    const customerHtml = await renderAsync(
-      React.createElement(OrderConfirmationEmail, { 
-        orderData,
-        customerName: orderData.customerName,
-      })
-    )
-    
-    console.log('Attempting to send customer email to:', orderData.customerEmail)
-    const customerEmailResult = await resend.emails.send({
-      from: 'Cleveland Cartridge Co. <onboarding@resend.dev>',
-      to: orderData.customerEmail,
-      subject: `Cleveland Cartridge Co. - Order Confirmation #${orderData.id.substring(0, 8)}`,
-      html: customerHtml,
-    })
-    
-    console.log('Customer email result:', customerEmailResult)
-    
-    // Send admin notification email
-    const adminHtml = await renderAsync(
-      React.createElement(AdminNotificationEmail, { orderData })
-    )
-    
-    console.log('Attempting to send admin email to: support@clevelandcartridge.co')
-    const adminEmailResult = await resend.emails.send({
-      from: 'Cleveland Cartridge Co. <onboarding@resend.dev>',
-      to: 'support@clevelandcartridge.co',
-      subject: `New Order Received #${orderData.id.substring(0, 8)}`,
-      html: adminHtml,
-    })
-    
-    console.log('Admin email result:', adminEmailResult)
-    
-    // Update order with notification status
-    const { error: updateError } = await supabase
-      .from('orders')
-      .update({ notification_sent: true })
-      .eq('id', orderData.id)
-    
-    if (updateError) {
-      console.error('Error updating order notification status:', updateError)
-    }
-    
+    // Parse the request body to get order details
+    const orderData: OrderDetails = await req.json();
+
+    // Format order items
+    const formattedItems = orderData.items.map(item => 
+      `${item.quantity}x ${item.name} - $${(item.quantity * item.price).toFixed(2)}`
+    ).join("<br />");
+
+    // Send confirmation email to customer
+    const customerEmail = await resend.emails.send({
+      from: "onboarding@resend.dev", // Using default Resend domain
+      to: [orderData.customerEmail],
+      subject: `Order Confirmation #${orderData.orderId}`,
+      html: `
+        <h1>Thank you for your order!</h1>
+        <p>Order #${orderData.orderId} has been received and is being processed.</p>
+        <h2>Order Details:</h2>
+        <p><strong>Total:</strong> $${orderData.orderTotal.toFixed(2)}</p>
+        <h3>Items:</h3>
+        <p>${formattedItems}</p>
+        <p>We'll send you another email once your order has been shipped.</p>
+      `,
+    });
+
+    // Send notification to admin
+    const adminEmail = await resend.emails.send({
+      from: "onboarding@resend.dev", // Using default Resend domain
+      to: ["info@clevelandcartridge.co"], // Admin email
+      subject: `New Order #${orderData.orderId}`,
+      html: `
+        <h1>New Order Received</h1>
+        <p>Order #${orderData.orderId} has been placed.</p>
+        <h2>Customer Information:</h2>
+        <p><strong>Name:</strong> ${orderData.customerName}</p>
+        <p><strong>Email:</strong> ${orderData.customerEmail}</p>
+        <h2>Order Details:</h2>
+        <p><strong>Total:</strong> $${orderData.orderTotal.toFixed(2)}</p>
+        <h3>Items:</h3>
+        <p>${formattedItems}</p>
+      `,
+    });
+
+    // Log success
+    console.log("Emails sent successfully:", customerEmail, adminEmail);
+
+    // Return success response
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Order notifications sent successfully',
-        orderId: orderData.id 
+        message: "Order notification emails sent" 
       }),
       {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
         status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
       }
-    )
-    
+    );
+
   } catch (error) {
-    console.error('Error processing order notification:', error)
-    
+    // Log error
+    console.error("Error sending notification emails:", error);
+
+    // Return error response
     return new Response(
       JSON.stringify({ 
         success: false, 
-        message: error.message || 'Failed to send order notifications' 
+        error: error.message 
       }),
       {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
         status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
       }
-    )
+    );
   }
-})
+});

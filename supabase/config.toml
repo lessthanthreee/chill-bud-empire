@@ -1,5 +1,28 @@
 
 project_id = "klkncqrjpvvzwyoqmhfe"
 
-[functions.notify-new-order]
-verify_jwt = false
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+
+[db]
+port = 54322
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+
+[auth]
+enabled = true
+
+[inbucket]
+enabled = true
+
+[studio]
+enabled = true
+
+[auth.email]
+enabled = true

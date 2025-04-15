@@ -8,125 +8,104 @@ const Shipping = () => {
       <Helmet>
         <title>Shipping Policy | Cleveland Cartridge Co.</title>
       </Helmet>
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 pt-24">
         <div className="max-w-3xl mx-auto bg-card p-8 rounded-lg shadow-sm">
           <h1 className="text-3xl font-bold mb-6">Shipping Policy</h1>
           
           <div className="prose prose-stone max-w-none">
             <p className="text-muted-foreground mb-4">
-              Last Updated: April 1, 2025
+              Last Updated: April 15, 2025
             </p>
             
             <p className="lead mb-6">
-              Cleveland Cartridge Co. (established March 25, 2025) is committed to providing reliable, secure, and efficient shipping services for all our customers. This Shipping Policy outlines our procedures, rates, and guidelines for product delivery.
+              Cleveland Cartridge Co. is committed to providing fast, reliable shipping services for all customers. Our unique model combines same-day local delivery in Cleveland with nationwide shipping to states where Delta-8 is legal.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Shipping Rates</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">1. Cleveland Same-Day Delivery</h2>
             <p>
-              We offer the following shipping options for all orders within the continental United States:
+              For customers in Cleveland, Ohio, we offer same-day delivery service:
             </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li><strong>Free Shipping:</strong> On all orders over $75</li>
-              <li><strong>Standard Shipping:</strong> $6.00 for orders under $75 (delivery in 3-5 business days)</li>
-              <li><strong>Express Shipping:</strong> $15.00 (delivery in 2-3 business days)</li>
-              <li><strong>Priority Shipping:</strong> $25.00 (delivery in 1-2 business days)</li>
+            <ul className="list-disc pl-6 space-y-2 mt-3 mb-4">
+              <li><strong>Delivery Area:</strong> All neighborhoods within Cleveland city limits and select surrounding suburbs</li>
+              <li><strong>Order Cutoff:</strong> Orders placed by 4:00 PM EST qualify for same-day delivery</li>
+              <li><strong>Delivery Window:</strong> Between 4:00 PM and 8:00 PM EST</li>
+              <li><strong>Delivery Fee:</strong> $5.99 (Free on orders over $50)</li>
+              <li><strong>Minimum Order:</strong> $25</li>
             </ul>
-            <p className="mt-2">
-              Shipping costs are calculated at checkout based on the order value, weight, and delivery address. Any applicable taxes or duties are the responsibility of the customer and will be collected at checkout or upon delivery as required by law.
+            <p>
+              Our delivery personnel will require age verification (21+) upon delivery. Please have a valid ID ready to present.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Order Processing Time</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">2. Nationwide Shipping</h2>
             <p>
-              All orders are processed within 1-2 business days from the time of purchase. Orders placed after 2:00 PM EST will begin processing the following business day. Orders placed on weekends or holidays will be processed on the next business day.
+              We ship to most states where Delta-8 THC is legal:
             </p>
-            <p className="mt-2">
-              During high-volume periods (such as holidays or special promotions), processing times may be slightly longer. We will notify customers of any significant delays via email.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Shipping Carriers</h2>
-            <p>
-              We utilize reliable shipping carriers including USPS, UPS, and FedEx to deliver our products. The specific carrier used for your order will depend on your location, the shipping method selected, and product availability.
-            </p>
-            <p className="mt-2">
-              All shipments include tracking information which will be provided to you via email once your order is shipped.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Shipping Time</h2>
-            <p>
-              After your order is processed and shipped, delivery typically takes:
-            </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li><strong>Standard Shipping:</strong> 3-5 business days</li>
-              <li><strong>Express Shipping:</strong> 2-3 business days</li>
-              <li><strong>Priority Shipping:</strong> 1-2 business days</li>
+            <ul className="list-disc pl-6 space-y-2 mt-3">
+              <li><strong>Processing Time:</strong> Orders are processed within 1-2 business days</li>
+              <li><strong>Shipping Method:</strong> USPS Priority Mail (2-3 business days)</li>
+              <li><strong>Shipping Fee:</strong> $7.99 (Free on orders over $75)</li>
+              <li><strong>Tracking:</strong> All shipments include tracking information sent via email</li>
             </ul>
-            <p className="mt-2">
-              Please note that these are estimated delivery times and not guaranteed. Shipping times may be affected by factors outside our control, such as weather conditions, carrier delays, customs clearance (where applicable), or other unforeseen circumstances.
+            
+            <div className="bg-muted p-4 rounded-md my-6">
+              <p className="font-medium">Important Note on Legality:</p>
+              <p className="text-sm mt-2">
+                Due to varying state laws, we do not ship to states where Delta-8 THC is prohibited. It is the customer's responsibility to verify that Delta-8 THC products are legal in their state before placing an order. Cleveland Cartridge Co. is not responsible for any legal issues arising from shipments to states where Delta-8 THC is restricted.
+              </p>
+            </div>
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">3. Packaging and Discretion</h2>
+            <p>
+              We understand the importance of discretion. All products are shipped in plain, unmarked packaging with no indication of the contents. Your privacy is our priority:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3">
+              <li>Plain, odor-proof packaging</li>
+              <li>No branding or product information visible on outer packaging</li>
+              <li>Professional, discreet labeling</li>
+              <li>Secure sealing to prevent tampering</li>
+            </ul>
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">4. Order Tracking</h2>
+            <p>
+              Once your order ships, you'll receive an email with tracking information. You can also track your order by:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3">
+              <li>Logging into your account on our website</li>
+              <li>Using the tracking link in your shipping confirmation email</li>
+              <li>Contacting customer service at orders@clevelandcartridge.co</li>
+            </ul>
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">5. Delivery Issues</h2>
+            <p>
+              In the rare event of a delivery issue:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3">
+              <li><strong>Missing or Damaged Items:</strong> Please contact us within 48 hours of delivery</li>
+              <li><strong>Failed Delivery Attempts:</strong> For local delivery, we'll contact you to reschedule. For shipped orders, carrier policies apply for redelivery</li>
+              <li><strong>Incorrect Address:</strong> Please double-check your shipping information at checkout. Address changes after shipping may incur additional fees</li>
+            </ul>
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">6. Returns and Exchanges</h2>
+            <p>
+              Due to the nature of our products:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 mt-3">
+              <li>We accept returns of unopened, unused products within 14 days of delivery</li>
+              <li>Returns must be in original, sealed packaging</li>
+              <li>Return shipping costs are the customer's responsibility</li>
+              <li>Refunds are processed to the original payment method</li>
+            </ul>
+            <p className="mt-4">
+              To initiate a return, please contact orders@clevelandcartridge.co with your order number and reason for return.
             </p>
             
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Tracking Information</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4">7. Contact Information</h2>
             <p>
-              Once your order ships, you will receive a confirmation email with tracking information. You can use this information to track the status of your delivery through the carrier's website. If you create an account on our website, you can also track your orders through your account dashboard.
+              For any questions regarding shipping, delivery, or returns:
             </p>
             <p className="mt-2">
-              If you have not received tracking information within 3 business days after placing your order, please contact our customer service team at contact@clevelandcartridge.com.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Shipping Restrictions</h2>
-            <p>
-              We currently ship to the continental United States only. We do not ship to PO boxes, APO/FPO addresses, or international destinations at this time.
-            </p>
-            <p className="mt-2">
-              <strong>Legal Restrictions:</strong> Due to varying state laws regarding delta-8 THC products, we are unable to ship to certain states where these products are restricted or prohibited. Currently, we do not ship to: Alaska, Arizona, Arkansas, Colorado, Delaware, Idaho, Iowa, Mississippi, Montana, Nebraska, Nevada, North Dakota, Oregon, Rhode Island, Utah, Vermont, and Washington. This list is subject to change as laws evolve.
-            </p>
-            <p className="mt-2">
-              It is your responsibility to ensure delta-8 THC products are legal in your state before placing an order. We reserve the right to cancel any order to a state where our products are prohibited.
-            </p>
-            <p className="mt-2">
-              Age verification is required for all deliveries. The recipient must be 21 years of age or older and present a valid government-issued photo ID upon delivery.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Package Handling and Delivery</h2>
-            <p>
-              All packages require an adult signature (21+ years) upon delivery. Our carriers will make up to three delivery attempts. If delivery cannot be completed after three attempts, the package may be returned to us, and you will be responsible for any re-shipping costs.
-            </p>
-            <p className="mt-2">
-              To ensure successful delivery, please provide a shipping address where an adult will be available to receive the package during business hours.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Lost or Damaged Packages</h2>
-            <p>
-              If your package appears to be lost or damaged during shipping, please contact us within 7 days of the expected delivery date. We will work with the carrier to resolve the issue and, if necessary, arrange for a replacement shipment.
-            </p>
-            <p className="mt-2">
-              To file a claim for a damaged package, please take photos of the damaged packaging and products before disposing of any materials, as these may be required for the claim process.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Address Changes</h2>
-            <p>
-              If you need to change your shipping address after placing an order, please contact us immediately at contact@clevelandcartridge.com. We cannot guarantee that we will be able to change the address if the order has already been processed or shipped.
-            </p>
-            <p className="mt-2">
-              Address change requests must be received within 4 hours of placing your order to be considered. Any address changes may delay your order processing time.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Shipping Insurance</h2>
-            <p>
-              All orders are automatically insured against loss or damage during transit up to the full value of the purchase. There is no additional cost for this coverage.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Holiday Shipping</h2>
-            <p>
-              During major holidays, shipping carriers may experience delays. We recommend placing orders early during holiday seasons to ensure timely delivery. We will post notices on our website regarding any expected delays during these periods.
-            </p>
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Contact Us</h2>
-            <p>
-              If you have any questions about our shipping policy or need assistance with a shipment, please contact our customer service team:
-            </p>
-            <p className="mt-2">
-              Email: contact@clevelandcartridge.com<br />
-              Hours of Operation: Monday-Saturday, 10am - 8pm EST
+              Email: orders@clevelandcartridge.co<br />
+              Response time: Within 24 hours, Monday-Friday
             </p>
           </div>
         </div>

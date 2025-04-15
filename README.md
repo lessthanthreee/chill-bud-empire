@@ -16,10 +16,9 @@ Cleveland Cartridge Co. is Cleveland's premier Delta-8 THC delivery service. Thi
 
 ## Products
 
-- Delta-8 THC vape pods and cartridges
-- Disposable vape pens
-- Starter kits and accessories
-- More products coming soon!
+- Premium Delta-8 THC vape pods
+- Limited edition ceramic cartridges (coming soon)
+- More products launching soon!
 
 ## Technology Stack
 
@@ -49,6 +48,12 @@ npm run dev
 # Build for production
 npm run build
 ```
+
+## Contact Information
+
+- Website: clevelandcartridge.co
+- Email: contact@clevelandcartridge.co, orders@clevelandcartridge.co, info@clevelandcartridge.co
+- Social: Twitter, Telegram, Instagram
 
 ## License
 

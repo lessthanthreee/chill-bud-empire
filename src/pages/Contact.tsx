@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ClockIcon, MapPin, MailIcon, PhoneIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -37,16 +38,31 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, subject: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Save to Supabase
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          { 
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null, 
+            subject: formData.subject,
+            message: formData.message
+          }
+        ]);
+        
+      if (error) throw error;
+
       toast({
         title: "Message Sent!",
         description: "We'll get back to you as soon as possible.",
       });
+
       setFormData({
         name: "",
         email: "",
@@ -54,8 +70,16 @@ const Contact = () => {
         subject: "",
         message: ""
       });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -77,9 +101,8 @@ const Contact = () => {
                 <div className="flex items-start space-x-4">
                   <MapPin className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-medium text-lg mb-2">Visit Us</h3>
-                    <p className="text-muted-foreground">123 Main Street</p>
-                    <p className="text-muted-foreground">Columbus, OH 43215</p>
+                    <h3 className="font-medium text-lg mb-2">Location</h3>
+                    <p className="text-muted-foreground">Cleveland, Ohio</p>
                   </div>
                 </div>
               </CardContent>
@@ -91,20 +114,9 @@ const Contact = () => {
                   <MailIcon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-medium text-lg mb-2">Email Us</h3>
-                    <p className="text-muted-foreground">info@chillbudempire.com</p>
-                    <p className="text-muted-foreground">support@chillbudempire.com</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-start space-x-4">
-                  <PhoneIcon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-medium text-lg mb-2">Call Us</h3>
-                    <p className="text-muted-foreground">(555) 123-4567</p>
+                    <p className="text-muted-foreground">contact@clevelandcartridge.co</p>
+                    <p className="text-muted-foreground">orders@clevelandcartridge.co</p>
+                    <p className="text-muted-foreground">info@clevelandcartridge.co</p>
                   </div>
                 </div>
               </CardContent>
@@ -229,7 +241,7 @@ const Contact = () => {
         <h2 className="text-2xl font-bold mb-6">Find Us</h2>
         <div className="border border-border rounded-lg overflow-hidden h-[400px]">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d196569.1571231069!2d-83.12373757265847!3d39.98291870266783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x883889c1b990de71%3A0xe43266f8cfb1b533!2sColumbus%2C%20OH!5e0!3m2!1sen!2sus!4v1681737626037!5m2!1sen!2sus"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d94940.49317622156!2d-81.73183590777925!3d41.49932699645865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8830ef2ee3686b2d%3A0xed04cb55f7621842!2sCleveland%2C%20OH!5e0!3m2!1sen!2sus!4v1681737626037!5m2!1sen!2sus"
             width="100%"
             height="100%"
             style={{ border: 0 }}
@@ -251,17 +263,17 @@ const Contact = () => {
                 What payment methods do you accept?
               </h3>
               <p className="text-muted-foreground">
-                We accept cryptocurrency payments for all online orders. You can also pay in person at our Columbus location.
+                We accept cryptocurrency payments for all online orders, including Bitcoin, Ethereum, and other major cryptocurrencies. Payment instructions will be sent via email after your order is placed.
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
               <h3 className="font-medium text-lg mb-2">
-                Do you ship outside of Ohio?
+                Do you ship nationwide?
               </h3>
               <p className="text-muted-foreground">
-                Currently, we only offer shipping within the state of Ohio to comply with local regulations.
+                Yes, we ship to all states where Delta-8 is legal. We offer same-day delivery in Cleveland and standard shipping to legal states nationwide. Free shipping on orders over $75!
               </p>
             </CardContent>
           </Card>
@@ -271,17 +283,17 @@ const Contact = () => {
                 Are your products lab-tested?
               </h3>
               <p className="text-muted-foreground">
-                Yes, all of our products undergo rigorous third-party lab testing for purity and potency. Lab results are available upon request.
+                Yes, all of our products undergo rigorous third-party lab testing for purity and potency. Lab results are available in the Lab Results section of our website.
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
               <h3 className="font-medium text-lg mb-2">
-                What is your return policy?
+                Is my information secure?
               </h3>
               <p className="text-muted-foreground">
-                We offer returns on unopened products within 14 days of purchase. Please contact us directly to initiate a return.
+                Absolutely. We use industry-standard encryption to protect all customer data. We never share or sell your personal information, and your shipping address is stored securely using advanced encryption protocols.
               </p>
             </CardContent>
           </Card>

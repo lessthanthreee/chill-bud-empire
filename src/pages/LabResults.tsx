@@ -2,7 +2,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, Info } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -11,38 +10,38 @@ const LabResults = () => {
   const labReports = [
     {
       id: "batch-001",
-      name: "Batch #125 - March 2025",
-      date: "March 15, 2025",
+      name: "Batch #125 - April 2025",
+      date: "April 15, 2025",
       type: "Full Panel Analysis",
-      description: "Complete analysis of contents, potency, and safety.",
+      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
       pdfUrl: "#"
     },
     {
       id: "batch-002",
-      name: "Batch #124 - February 2025",
-      date: "February 22, 2025",
+      name: "Batch #124 - March 2025",
+      date: "March 22, 2025",
       type: "Full Panel Analysis",
-      description: "Complete analysis of contents, potency, and safety.",
+      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
       pdfUrl: "#"
     },
     {
       id: "batch-003",
-      name: "Batch #123 - January 2025",
-      date: "January 18, 2025",
+      name: "Batch #123 - February 2025",
+      date: "February 18, 2025",
       type: "Full Panel Analysis",
-      description: "Complete analysis of contents, potency, and safety.",
+      description: "Complete analysis of Premium Delta-8 Vape Pod contents, potency, and safety.",
       pdfUrl: "#"
     }
   ];
 
-  const SampleLabReport = () => (
+  const SampleLabReport = ({ report }) => (
     <div className="p-4">
       <h3 className="text-xl font-bold mb-4">Laboratory Analysis Report</h3>
       <div className="mb-4">
         <p><strong>Sample ID:</strong> CCC-2025-{Math.floor(Math.random() * 1000)}</p>
-        <p><strong>Product Name:</strong> Delta-8 THC Vape Cartridge</p>
-        <p><strong>Batch Number:</strong> {labReports[0].name.split('-')[1].trim()}</p>
-        <p><strong>Test Date:</strong> {labReports[0].date}</p>
+        <p><strong>Product Name:</strong> Premium Delta-8 THC Vape Pod</p>
+        <p><strong>Batch Number:</strong> {report.name.split('-')[1].trim()}</p>
+        <p><strong>Test Date:</strong> {report.date}</p>
         <p><strong>Laboratory:</strong> Cleveland Analytics</p>
       </div>
       
@@ -111,8 +110,8 @@ const LabResults = () => {
       </div>
       
       <div className="mt-8 text-sm text-muted-foreground">
-        <p>This report is for informational purposes only. Actual lab reports may vary in format and content.</p>
-        <p>Contact Cleveland Cartridge Co. for complete lab results.</p>
+        <p>This report is for informational purposes only.</p>
+        <p>Contact Cleveland Cartridge Co. for complete lab results at info@clevelandcartridge.co.</p>
       </div>
     </div>
   );
@@ -177,7 +176,7 @@ const LabResults = () => {
                     <DialogHeader>
                       <DialogTitle>{report.name} - Lab Report</DialogTitle>
                     </DialogHeader>
-                    <SampleLabReport />
+                    <SampleLabReport report={report} />
                   </DialogContent>
                 </Dialog>
                 <Button variant="secondary" className="w-full mt-2 gap-2">
@@ -195,7 +194,7 @@ const LabResults = () => {
             Our lab reports provide detailed information about the composition and safety of our products. If you have any questions about interpreting these reports, please don't hesitate to contact us.
           </p>
           <p>
-            For more information or to request specific test results, please email us at <a href="mailto:labs@clevelandcartridge.com" className="text-primary underline">labs@clevelandcartridge.com</a>.
+            For more information or to request specific test results, please email us at <a href="mailto:info@clevelandcartridge.co" className="text-primary underline">info@clevelandcartridge.co</a>.
           </p>
         </div>
       </div>

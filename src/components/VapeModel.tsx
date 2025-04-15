@@ -30,7 +30,7 @@ export function VapeModel(props: VapeModelProps) {
       >
         <cylinderGeometry args={[0.5, 0.5, 3, 32]} />
         <meshStandardMaterial 
-          color="#2E8B57" 
+          color="#1E5631" 
           metalness={0.8}
           roughness={0.2}
         />
@@ -80,9 +80,44 @@ export function VapeModel(props: VapeModelProps) {
           metalness={0.1}
           roughness={0.2}
           emissive="#FFFFFF"
+          emissiveIntensity={0.4}
+        />
+      </mesh>
+
+      {/* Cleveland Cartridge Co. Logo (simplified) */}
+      <mesh
+        position={[0, 0, 0.55]}
+        rotation={[0, 0, Math.PI / 2]}
+        scale={[0.1, 0.6, 0.01]}
+        castShadow
+        receiveShadow
+      >
+        <planeGeometry args={[1, 1]} />
+        <meshStandardMaterial
+          color="#FFFFFF"
+          metalness={0.1}
+          roughness={0.2}
+          emissive="#FFFFFF"
+          emissiveIntensity={0.4}
+        />
+      </mesh>
+
+      {/* Vapor effect (subtle) */}
+      <mesh
+        position={[0, 2, 0]}
+        scale={[0.15, 0.15, 0.15]}
+      >
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial
+          color="#FFFFFF"
+          transparent={true}
+          opacity={0.3}
+          emissive="#FFFFFF"
           emissiveIntensity={0.2}
         />
       </mesh>
     </group>
   );
 }
+
+export default VapeModel;

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
+import { Instagram, Telegram, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -87,15 +87,17 @@ const Footer = () => {
             <h3 className="font-semibold mb-4 text-base">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Cleveland, Ohio</li>
-              <li>contact@clevelandcartridge.com</li>
+              <li>orders@clevelandcartridge.co</li>
+              <li>contact@clevelandcartridge.co</li>
+              <li>info@clevelandcartridge.co</li>
               <li>Hours: Mon-Sat: 10am - 8pm</li>
             </ul>
             <div className="flex space-x-4 mt-4">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                <Facebook className="h-5 w-5" />
+              <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Telegram className="h-5 w-5" />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Twitter className="h-5 w-5" />
