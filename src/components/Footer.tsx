@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Telegram, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
+import { Instagram, MessageCircle, Twitter, FileText, Shield, Truck, FlaskConical } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -97,7 +97,7 @@ const Footer = () => {
                 <Instagram className="h-5 w-5" />
               </a>
               <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                <Telegram className="h-5 w-5" />
+                <MessageCircle className="h-5 w-5" />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Twitter className="h-5 w-5" />
