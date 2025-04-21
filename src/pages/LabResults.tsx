@@ -1,120 +1,43 @@
 
 import React from 'react';
-import { Flask, FileCheck, Search, Shield } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SectionHeader } from '@/components/ui/section-header';
 
 const LabResults = () => {
-  const currentBatch = {
-    id: "CC2024-001",
-    date: "April 2024",
-    thcContent: "94.2%",
-    delta9Content: "<0.3%",
-    terpenes: ["β-Caryophyllene", "Limonene", "α-Humulene"],
-    testing: ["Heavy Metals", "Pesticides", "Residual Solvents", "Microbiological"]
-  };
-
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
-      <SectionHeader 
-        title="Laboratory Results"
-        subtitle="Transparency through third-party testing"
-      />
+      <h1 className="text-4xl font-bold mb-8">Lab Results</h1>
+      <div className="prose max-w-none">
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Third-Party Testing</h2>
+          <p>All Cleveland Cartridge Co. products undergo rigorous third-party laboratory testing to ensure quality, potency, and safety. Our lab results are regularly updated to provide you with the most current information.</p>
+        </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card className="border-2">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-4">
-              <Flask className="h-12 w-12 text-primary" />
-            </div>
-            <CardTitle>Current Batch Analysis</CardTitle>
-            <CardDescription>Batch ID: {currentBatch.id}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="bg-secondary/50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2">Cannabinoid Profile</h3>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>Delta-8 THC Content: {currentBatch.thcContent}</li>
-                  <li>Delta-9 THC Content: {currentBatch.delta9Content}</li>
-                </ul>
-              </div>
-              
-              <div className="bg-secondary/50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2">Key Terpenes</h3>
-                <ul className="space-y-2 text-muted-foreground">
-                  {currentBatch.terpenes.map((terpene, index) => (
-                    <li key={index}>{terpene}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Latest Test Results</h2>
+          <div className="bg-secondary p-6 rounded-lg">
+            <p className="text-lg mb-4">Current Batch: CC2024-001</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Delta-8 THC Content: 94.2%</li>
+              <li>Delta-9 THC Content: &lt;0.3%</li>
+              <li>No heavy metals detected</li>
+              <li>No residual solvents detected</li>
+              <li>Testing Date: April 2024</li>
+            </ul>
+            <p className="mt-4 text-sm">Full lab report available upon request.</p>
+          </div>
+        </section>
 
-        <Card className="border-2">
-          <CardHeader>
-            <div className="flex items-center justify-center mb-4">
-              <FileCheck className="h-12 w-12 text-primary" />
-            </div>
-            <CardTitle>Safety Testing</CardTitle>
-            <CardDescription>Comprehensive Analysis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {currentBatch.testing.map((test, index) => (
-                <div key={index} className="flex items-center gap-2 text-muted-foreground">
-                  <Shield className="h-4 w-4 text-green-500" />
-                  <span>{test} - Passed</span>
-                </div>
-              ))}
-              <div className="mt-4 p-4 bg-secondary/50 rounded-lg">
-                <p className="text-sm text-muted-foreground">
-                  All tests performed by ISO-certified laboratories. 
-                  Full lab reports available upon request.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border border-primary/20">
-          <CardHeader>
-            <Search className="h-8 w-8 text-primary mx-auto" />
-            <CardTitle className="text-center">Batch Lookup</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center text-muted-foreground">
-              Every product includes a QR code linking to its specific lab results
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-primary/20">
-          <CardHeader>
-            <Flask className="h-8 w-8 text-primary mx-auto" />
-            <CardTitle className="text-center">Testing Frequency</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center text-muted-foreground">
-              Each batch undergoes rigorous testing before release
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-primary/20">
-          <CardHeader>
-            <Shield className="h-8 w-8 text-primary mx-auto" />
-            <CardTitle className="text-center">Quality Guarantee</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center text-muted-foreground">
-              Products exceeding quality standards are never released
-            </p>
-          </CardContent>
-        </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Testing Standards</h2>
+          <p>Our products are tested for:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Cannabinoid profile</li>
+            <li>Terpene profile</li>
+            <li>Pesticides</li>
+            <li>Heavy metals</li>
+            <li>Residual solvents</li>
+            <li>Microbiological contaminants</li>
+          </ul>
+        </section>
       </div>
     </div>
   );
