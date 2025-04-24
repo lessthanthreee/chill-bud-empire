@@ -101,8 +101,7 @@ const CartSidebar = () => {
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
-codes   const [showSecurityInfo, setShowSecurityInfo] = useState(false);
-t 
+  const [showSecurityInfo, setShowSecurityInfo] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null); // or appropriate type
   const [promoCodeStatus, setPromoCodeStatus] = useState<'idle' | 'checking' | 'applied' | 'invalid' | 'error'>('idle');
