@@ -101,7 +101,11 @@ const CartSidebar = () => {
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
-  const [showSecurityInfo, setShowSecurityInfo] = useState(false);
+codes   const [showSecurityInfo, setShowSecurityInfo] = useState(false);
+t 
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null); // or appropriate type
+  const [promoCodeStatus, setPromoCodeStatus] = useState<'idle' | 'checking' | 'applied' | 'invalid' | 'error'>('idle');
 
   const handleShippingInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -502,110 +506,169 @@ const CartSidebar = () => {
     return (
       <div className="flex flex-col h-full">
         <div className="flex-1 overflow-y-auto py-4 space-y-6">
-          <div>
-            <h3 className="font-medium mb-2">Select Payment Method</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              We accept cryptocurrency payments only. Select your preferred crypto:
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button 
-                variant={selectedCrypto === 'btc' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('btc')}
+          {/* Promo Code Redeemer */}
+          <div className="bg-muted p-4 rounded-md mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium">Promo Code:</span>
+              <input
+                type="text"
+                className="border rounded px-2 py-1 text-sm flex-1"
+                placeholder="Enter code"
+                value={promoCode}
+                onChange={e => setPromoCode(e.target.value)}
+                disabled={!!appliedDiscount}
+                style={{ minWidth: 120 }}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  setPromoStatus(null);
+                  // Simulate backend validation (replace with real API call)
+                  setTimeout(() => {
+                    if (!promoCode) {
+                      setPromoStatus({ success: false, message: "Please enter a code." });
+                    } else if (promoCode.toLowerCase() === "chill10") {
+                      setPromoStatus({ success: true, message: "Code applied! 10% off.", discount: 10 });
+                      setAppliedDiscount(10);
+                    } else if (promoCode.toLowerCase() === "expired") {
+                      setPromoStatus({ success: false, message: "Code expired." });
+                    } else {
+                      setPromoStatus({ success: false, message: "Invalid code." });
+                    }
+                  }, 600);
+                }}
+                disabled={!!appliedDiscount || !promoCode}
               >
-                {cryptoIcons.btc} Bitcoin
+                {appliedDiscount ? "Applied" : "Apply"}
               </Button>
-              <Button 
-                variant={selectedCrypto === 'eth' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('eth')}
-              >
-                {cryptoIcons.eth} Ethereum
-              </Button>
-              <Button 
-                variant={selectedCrypto === 'doge' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('doge')}
-              >
-                {cryptoIcons.doge} Dogecoin
-              </Button>
-              <Button 
-                variant={selectedCrypto === 'sol' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('sol')}
-              >
-                {cryptoIcons.sol} Solana
-              </Button>
-              <Button 
-                variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('bnb')}
-              >
-                {cryptoIcons.bnb} BNB
-              </Button>
-              <Button 
-                variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
-                className="justify-start"
-                onClick={() => handleSelectCrypto('nano')}
-              >
-                {cryptoIcons.nano} Nano
-              </Button>
+              {appliedDiscount ? (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setAppliedDiscount(0);
+                    setPromoCode("");
+                    setPromoStatus(null);
+                  }}
+                >
+                  Remove
+                </Button>
+              ) : null}
             </div>
+            {promoStatus && (
+              <div className={`text-xs mt-1 ${promoStatus.success ? "text-green-600" : "text-red-500"}`}>
+                {promoStatus.message}
+              </div>
+            )}
           </div>
+          {/* End Promo Code Redeemer */}
+          <div className="flex-1 overflow-y-auto py-4 space-y-6">
+            <div>
+              <h3 className="font-medium mb-2">Select Payment Method</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                We accept cryptocurrency payments only. Select your preferred crypto:
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  variant={selectedCrypto === 'btc' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('btc')}
+                >
+                  {cryptoIcons.btc} Bitcoin
+                </Button>
+                <Button 
+                  variant={selectedCrypto === 'eth' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('eth')}
+                >
+                  {cryptoIcons.eth} Ethereum
+                </Button>
+                <Button 
+                  variant={selectedCrypto === 'doge' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('doge')}
+                >
+                  {cryptoIcons.doge} Dogecoin
+                </Button>
+                <Button 
+                  variant={selectedCrypto === 'sol' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('sol')}
+                >
+                  {cryptoIcons.sol} Solana
+                </Button>
+                <Button 
+                  variant={selectedCrypto === 'bnb' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('bnb')}
+                >
+                  {cryptoIcons.bnb} BNB
+                </Button>
+                <Button 
+                  variant={selectedCrypto === 'nano' ? 'default' : 'outline'} 
+                  className="justify-start"
+                  onClick={() => handleSelectCrypto('nano')}
+                >
+                  {cryptoIcons.nano} Nano
+                </Button>
+              </div>
+            </div>
 
-          <div className="bg-muted p-4 rounded-md">
-            <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium">Amount due:</span>
-              <span className="text-sm font-bold">${cartTotal.toFixed(2)}</span>
+            <div className="bg-muted p-4 rounded-md">
+              <div className="flex justify-between mb-2">
+                <span className="text-sm font-medium">Amount due:</span>
+                <span className="text-sm font-bold">${cartTotal.toFixed(2)}</span>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Send to address:</span>
+                  {copiedAddress ? (
+                    <span className="text-xs text-green-500 flex items-center">
+                      <CheckCircle2 className="h-3 w-3 mr-1" /> Copied
+                    </span>
+                  ) : null}
+                </div>
+                <div 
+                  className="relative bg-background border border-border rounded-md p-2 text-xs font-mono break-all cursor-pointer"
+                  onClick={handleCopyAddress}
+                >
+                  {cryptoAddresses[selectedCrypto]}
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-6 text-xs"
+                    onClick={handleCopyAddress}
+                  >
+                    <Clipboard className="h-3 w-3 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
+                </p>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Send to address:</span>
-                {copiedAddress ? (
-                  <span className="text-xs text-green-500 flex items-center">
-                    <CheckCircle2 className="h-3 w-3 mr-1" /> Copied
-                  </span>
-                ) : null}
-              </div>
-              <div 
-                className="relative bg-background border border-border rounded-md p-2 text-xs font-mono break-all cursor-pointer"
-                onClick={handleCopyAddress}
+              <p className="text-sm">After you've sent the payment:</p>
+              <Button 
+                className="w-full"
+                onClick={handleOrderComplete}
+                disabled={isSubmitting}
               >
-                {cryptoAddresses[selectedCrypto]}
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-6 text-xs"
-                  onClick={handleCopyAddress}
-                >
-                  <Clipboard className="h-3 w-3 mr-1" /> Copy
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Send exactly ${cartTotal.toFixed(2)} worth of {selectedCrypto.toUpperCase()} to the address above.
-              </p>
+                {isSubmitting ? "Processing..." : "Complete Order"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCheckoutStep('shipping')}
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                Back to Shipping
+              </Button>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-sm">After you've sent the payment:</p>
-            <Button 
-              className="w-full"
-              onClick={handleOrderComplete}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Processing..." : "Complete Order"}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setCheckoutStep('shipping')}
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              Back to Shipping
-            </Button>
           </div>
         </div>
       </div>

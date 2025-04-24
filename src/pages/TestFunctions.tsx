@@ -86,7 +86,7 @@ const TestFunctions = () => {
     
     toast({
       title: "Cart Test Complete",
-      description: `Added products to cart. Cart now has ${cartCount} items.`,
+      description: `Test sequence initiated: Cleared cart, added 2 products, updated quantity. Check console/cart state for results.`,
     });
   };
   
