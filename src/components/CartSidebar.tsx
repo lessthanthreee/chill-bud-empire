@@ -102,8 +102,9 @@ const CartSidebar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentInfo, setShowPaymentInfo] = useState(false);
   const [showSecurityInfo, setShowSecurityInfo] = useState(false);
-  const [promoCode, setPromoCode] = useState('');
-  const [appliedPromo, setAppliedPromo] = useState(null); // or appropriate type
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(0); // Ensure discount state exists
+  const [promoStatus, setPromoStatus] = useState(null); // Unified status for promo code
   const [promoCodeStatus, setPromoCodeStatus] = useState<'idle' | 'checking' | 'applied' | 'invalid' | 'error'>('idle');
 
   const handleShippingInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -767,3 +768,17 @@ const CartSidebar = () => {
 };
 
 export default CartSidebar;
+
+{/* Order Summary Discount Display */}
+{subtotal > 0 && appliedDiscount > 0 && (
+  <div className="flex justify-between text-green-600">
+    <span>Discount ({appliedDiscount}%):</span>
+    <span>- ${(subtotal * appliedDiscount / 100).toFixed(2)}</span>
+  </div>
+)}
+<Button
+  type="submit"
+  disabled={isSubmitting || cart.length === 0 || !shippingInfo.name || !shippingInfo.email || !shippingInfo.address || !shippingInfo.city || !shippingInfo.state || !shippingInfo.zipCode}
+>
+  {isSubmitting ? "Placing Order..." : "Place Order"}
+</Button>
