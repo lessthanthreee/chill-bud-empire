@@ -768,17 +768,3 @@ const CartSidebar = () => {
 };
 
 export default CartSidebar;
-
-{/* Order Summary Discount Display */}
-{subtotal > 0 && appliedDiscount > 0 && (
-  <div className="flex justify-between text-green-600">
-    <span>Discount ({appliedDiscount}%):</span>
-    <span>- ${(subtotal * appliedDiscount / 100).toFixed(2)}</span>
-  </div>
-)}
-<Button
-  type="submit"
-  disabled={isSubmitting || cart.length === 0 || !shippingInfo.name || !shippingInfo.email || !shippingInfo.address || !shippingInfo.city || !shippingInfo.state || !shippingInfo.zipCode}
->
-  {isSubmitting ? "Placing Order..." : "Place Order"}
-</Button>
