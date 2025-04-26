@@ -1,10 +1,19 @@
 
 // Import necessary modules
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import nodemailer from "npm:nodemailer@6.10.1";
 
-// Initialize Resend with the API key
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+// Gmail SMTP credentials from environment variables
+const GMAIL_USER = Deno.env.get("GMAIL_USER");
+const GMAIL_PASS = Deno.env.get("GMAIL_APP_PASSWORD");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: GMAIL_USER,
+    pass: GMAIL_PASS,
+  },
+});
 
 // Set CORS headers
 const corsHeaders = {
@@ -44,9 +53,9 @@ serve(async (req: Request) => {
     ).join("<br />");
 
     // Send confirmation email to customer
-    const customerEmail = await resend.emails.send({
-      from: "onboarding@resend.dev", // Using default Resend domain
-      to: [orderData.customerEmail],
+    const customerMailOptions = {
+      from: GMAIL_USER,
+      to: orderData.customerEmail,
       subject: `Order Confirmation #${orderData.orderId}`,
       html: `
         <h1>Thank you for your order!</h1>
@@ -57,12 +66,13 @@ serve(async (req: Request) => {
         <p>${formattedItems}</p>
         <p>We'll send you another email once your order has been shipped.</p>
       `,
-    });
+    };
+    const customerEmailResult = await transporter.sendMail(customerMailOptions);
 
     // Send notification to admin
-    const adminEmail = await resend.emails.send({
-      from: "onboarding@resend.dev", // Using default Resend domain
-      to: ["info@clevelandcartridge.co"], // Admin email
+    const adminMailOptions = {
+      from: GMAIL_USER,
+      to: "info@clevelandcartridge.co",
       subject: `New Order #${orderData.orderId}`,
       html: `
         <h1>New Order Received</h1>
@@ -75,10 +85,11 @@ serve(async (req: Request) => {
         <h3>Items:</h3>
         <p>${formattedItems}</p>
       `,
-    });
+    };
+    const adminEmailResult = await transporter.sendMail(adminMailOptions);
 
     // Log success
-    console.log("Emails sent successfully:", customerEmail, adminEmail);
+    console.log("Emails sent successfully:", customerEmailResult, adminEmailResult);
 
     // Return success response
     return new Response(
