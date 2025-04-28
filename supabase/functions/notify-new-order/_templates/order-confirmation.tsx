@@ -101,7 +101,7 @@ const OrderConfirmationEmail: React.FC<OrderConfirmationEmailProps> = ({
           <Hr style={styles.hr} />
           
           <Text style={styles.text}>
-            If you have any questions about your order or payment process, please contact our customer service team at support@clevelandcartridge.co.
+            If you have any questions about your order or payment process, please contact our customer service team at clevelandcartridge@gmail.com.
           </Text>
           
           <Text style={styles.footer}>

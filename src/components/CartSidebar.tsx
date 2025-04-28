@@ -701,7 +701,7 @@ const CartSidebar = () => {
                 <strong>Important:</strong> To complete your purchase, please follow the cryptocurrency payment instructions in your email. Remember to include your order ID in the transaction memo for faster processing.
               </p>
               <p className="text-sm">
-                If you have any questions or need help with the payment process, contact our support team at support@clevelandcartridge.co
+                If you have any questions or need help with the payment process, contact our support team at clevelandcartridge@gmail.com
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>

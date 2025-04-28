@@ -297,7 +297,7 @@ const FAQ = () => {
               <div>
                 <h3 className="font-medium">Contact Us</h3>
                 <p className="text-sm text-muted-foreground">
-                  Email us at support@deltacannabis.com or use our contact form.
+                  Email us at clevelandcartridge@gmail.com or use our contact form.
                 </p>
               </div>
             </div>
@@ -308,7 +308,7 @@ const FAQ = () => {
               <div>
                 <h3 className="font-medium">Compliance Concerns</h3>
                 <p className="text-sm text-muted-foreground">
-                  For questions about legal compliance, email legal@deltacannabis.com
+                  For questions about legal compliance, email clevelandcartridge@gmail.com
                 </p>
               </div>
             </div>

@@ -87,9 +87,7 @@ const Footer = () => {
             <h3 className="font-semibold mb-4 text-base">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Cleveland, Ohio</li>
-              <li>orders@clevelandcartridge.co</li>
-              <li>contact@clevelandcartridge.co</li>
-              <li>info@clevelandcartridge.co</li>
+              <li>clevelandcartridge@gmail.com</li>
               <li>Hours: Mon-Sat: 10am - 8pm</li>
             </ul>
             <div className="flex space-x-4 mt-4">

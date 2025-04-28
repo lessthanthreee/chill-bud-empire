@@ -52,7 +52,7 @@ npm run build
 ## Contact Information
 
 - Website: clevelandcartridge.co
-- Email: contact@clevelandcartridge.co, orders@clevelandcartridge.co, info@clevelandcartridge.co
+- Email: clevelandcartridge@gmail.com
 - Social: Twitter, Telegram, Instagram
 
 ## License

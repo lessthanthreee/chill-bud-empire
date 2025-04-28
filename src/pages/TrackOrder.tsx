@@ -351,7 +351,7 @@ const TrackOrder = () => {
               </p>
               <p className="text-sm text-muted-foreground">
                 For questions about your order, please contact our customer support 
-                team at support@deltacannabis.com or call us at (555) 123-4567.
+                team at clevelandcartridge@gmail.com or call us at (555) 123-4567.
               </p>
             </div>
           )}
@@ -552,7 +552,7 @@ const TrackOrder = () => {
                 <div>
                   <h3 className="font-medium">Order Status</h3>
                   <p className="text-sm text-muted-foreground">
-                    Email us at orders@deltacannabis.com with your order number
+                    Email us at clevelandcartridge@gmail.com with your order number
                   </p>
                 </div>
               </div>

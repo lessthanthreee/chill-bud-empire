@@ -89,9 +89,7 @@ const Contact = () => {
                 <MailIcon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-medium text-lg mb-2">Email Us</h3>
-                  <p className="text-muted-foreground">contact@clevelandcartridge.co</p>
-                  <p className="text-muted-foreground">orders@clevelandcartridge.co</p>
-                  <p className="text-muted-foreground">info@clevelandcartridge.co</p>
+                  <p className="text-muted-foreground">clevelandcartridge@gmail.com</p>
                 </div>
               </div>
             </CardContent>

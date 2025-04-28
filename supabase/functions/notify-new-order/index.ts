@@ -72,7 +72,7 @@ serve(async (req: Request) => {
     // Send notification to admin
     const adminMailOptions = {
       from: GMAIL_USER,
-      to: "info@clevelandcartridge.co",
+      to: "clevelandcartridge@gmail.com",
       subject: `New Order #${orderData.orderId}`,
       html: `
         <h1>New Order Received</h1>
