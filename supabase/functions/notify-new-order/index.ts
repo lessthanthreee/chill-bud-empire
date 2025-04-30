@@ -7,6 +7,14 @@ import nodemailer from "npm:nodemailer@6.10.1";
 const GMAIL_USER = Deno.env.get("GMAIL_USER");
 const GMAIL_PASS = Deno.env.get("GMAIL_APP_PASSWORD");
 
+if (!GMAIL_USER || !GMAIL_PASS) {
+  console.error("Missing Gmail credentials: GMAIL_USER or GMAIL_APP_PASSWORD environment variables are not set.", {
+    GMAIL_USER,
+    GMAIL_PASS
+  });
+  throw new Error("Missing Gmail credentials: GMAIL_USER or GMAIL_APP_PASSWORD environment variables are not set.");
+}
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -109,6 +117,9 @@ serve(async (req: Request) => {
   } catch (error) {
     // Log error
     console.error("Error sending notification emails:", error);
+    if (error && error.response) {
+      console.error("SMTP response:", error.response);
+    }
 
     // Return error response
     return new Response(
