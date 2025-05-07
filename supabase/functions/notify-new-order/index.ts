@@ -73,11 +73,12 @@ serve(async (req: Request) => {
         <h3>Items:</h3>
         <p>${formattedItems}</p>
         <p>We'll send you another email once your order has been shipped.</p>
+        <p>You can track your order status by visiting: <a href="https://clevelandcartridge.com/order-success?orderId=${orderData.orderId}">Order Tracking</a></p>
       `,
     };
     const customerEmailResult = await transporter.sendMail(customerMailOptions);
 
-    // Send notification to admin
+    // Send notification to admin with analytics tracking pixel
     const adminMailOptions = {
       from: GMAIL_USER,
       to: "clevelandcartridge@gmail.com",
@@ -92,6 +93,8 @@ serve(async (req: Request) => {
         <p><strong>Total:</strong> $${orderData.orderTotal.toFixed(2)}</p>
         <h3>Items:</h3>
         <p>${formattedItems}</p>
+        <p>View full details in the admin dashboard.</p>
+        <img src="https://www.google-analytics.com/collect?v=1&tid=MEASUREMENT_ID&cid=555&t=event&ec=email&ea=open&el=admin_order_notification&ev=1" width="1" height="1" />
       `,
     };
     const adminEmailResult = await transporter.sendMail(adminMailOptions);

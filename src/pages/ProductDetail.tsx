@@ -1,16 +1,12 @@
-
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ChevronDown, Check, Truck, ShieldCheck, CreditCard, Clock, AlertCircle } from "lucide-react";
-import { useCart } from '@/context/CartContext';
-import { Product } from '@/types/database';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/components/ui/use-toast';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { products as sampleProducts } from '@/data/products';
+import { useCart } from "@/context/CartContext";
+import { ProductSchema } from "@/components/StructuredData";
+import { toast } from "@/components/ui/use-toast";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -137,7 +133,22 @@ const ProductDetail = () => {
   const isComingSoon = product.comingSoon || product.inventory === 0;
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24">
+    <div className="container mx-auto px-4 py-8">
+      {/* Schema.org structured data for Google */}
+      <ProductSchema
+        name={product.name}
+        description={product.description || "High-quality Delta-8 product from Cleveland Cartridge Co."}
+        image={product.image || "/placeholder.svg"}
+        sku={`CCC-${product.id}`}
+        brand="Cleveland Cartridge Co."
+        offers={{
+          price: product.price,
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: `https://clevelandcartridge.com/products/${product.id}`
+        }}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <div className="rounded-lg overflow-hidden border border-border">
           <img

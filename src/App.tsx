@@ -19,6 +19,7 @@ import AgeVerification from './components/AgeVerification';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartSidebar from './components/CartSidebar';
+import OrderSuccess from './pages/OrderSuccess';
 
 const App: React.FC = () => {
   return (
@@ -40,6 +41,7 @@ const App: React.FC = () => {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/shipping" element={<Shipping />} />
               <Route path="/lab-results" element={<LabResults />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
             </Routes>
           </main>
           <Footer />

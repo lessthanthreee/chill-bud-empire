@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import { products } from "@/data/products";
 import { ShieldCheck, Truck, CreditCard, Star } from "lucide-react";
 import VapeScene from "@/components/VapeScene";
+import { LocalBusinessSchema } from "@/components/StructuredData";
 
 const Index = () => {
   // Get featured products
@@ -14,6 +15,35 @@ const Index = () => {
   
   return (
     <div>
+      {/* Schema.org structured data for Google */}
+      <LocalBusinessSchema
+        name="Cleveland Cartridge Co."
+        description="Cleveland's #1 Delta-8 delivery service, bringing premium products right to your door with exceptional service."
+        url="https://clevelandcartridge.com"
+        telephone="+12165551234"
+        address={{
+          streetAddress: "1234 Euclid Ave",
+          addressLocality: "Cleveland",
+          addressRegion: "OH",
+          postalCode: "44114",
+          addressCountry: "US"
+        }}
+        geo={{
+          latitude: 41.4993,
+          longitude: -81.6944
+        }}
+        images={[
+          "https://clevelandcartridge.com/logo.png",
+          "https://clevelandcartridge.com/store-front.jpg"
+        ]}
+        priceRange="$$"
+        openingHours={[
+          "Monday-Friday 09:00-21:00",
+          "Saturday 10:00-22:00",
+          "Sunday 10:00-18:00"
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-primary/5 py-20 md:py-32">
         <div className="container relative mx-auto px-4">
