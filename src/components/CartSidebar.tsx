@@ -1,4 +1,5 @@
-import React, { useState, useNavigate } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -88,6 +89,7 @@ const cryptoIcons: Record<CryptoOptions, React.ReactNode> = {
 
 const CartSidebar = () => {
   const { cart, isCartOpen, closeCart, clearCart, cartTotal, subtotal, shippingCost } = useCart();
+  const navigate = useNavigate();
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'shipping' | 'payment'>('cart');
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     name: '',
@@ -106,8 +108,6 @@ const CartSidebar = () => {
   const [appliedDiscount, setAppliedDiscount] = useState(0); // Ensure discount state exists
   const [promoStatus, setPromoStatus] = useState(null); // Unified status for promo code
   const [promoCodeStatus, setPromoCodeStatus] = useState<'idle' | 'checking' | 'applied' | 'invalid' | 'error'>('idle');
-
-  const navigate = useNavigate(); // Add this import at the top
 
   const handleShippingInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
